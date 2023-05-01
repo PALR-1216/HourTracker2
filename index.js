@@ -57,6 +57,12 @@ app.post('/LoginAuth', (req,res) =>{
 
 app.get('/signUp', (req,res) =>{
   res.render('SignUp')
+
+  let dateObj = new Date();
+  let year = dateObj.getFullYear().toString().slice(-2)
+  let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+  let date = ("0" + dateObj.getDate()).slice(-2);
+  let AllDate = year + "/" + month + "/" + date
 })
 
 
