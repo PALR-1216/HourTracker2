@@ -8,22 +8,58 @@ import bcryptjs from 'bcryptjs';
 import cookieParser from 'cookie-parser';
 import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
+import { nanoid } from 'nanoid'
+import { render } from 'ejs';
 
 app.set('trust proxy', 1);
-app.set('views', path.join('views'));
-app.set('view engine', 'ejs');
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.set('views', path.join("views"));
+app.set('view engine', 'ejs')
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 
+//make a login System in node with sessions and mysql 
 app.use(cookieParser());
 app.use(express.json());
 
+app.use(session({
+    cookie: {
+        secure: true,
+        maxAge: 21600000
+
+    },
+    secret: 'user_sid',
+    resave: true,
+    saveUninitialized: true,
+
+}))
+
+
+
 app.get('/', (req, res) => {
-  res.render('Home');
+  // res.render('Login');
+
+  if(req.cookies.user_id) {
+
+  }
+
+  else{
+    res.render("Login")
+  }
 });
+
+
+app.post('/LoginAuth', (req,res) =>{
+
+})
+
+
+
+app.get('/signUp', (req,res) =>{
+  res.render('SignUp')
+})
+
+
 
 app.listen(3000, () => {
   console.log('server running in port 3000');
