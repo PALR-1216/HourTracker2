@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid'
 import cors from 'cors'
 import { Low } from 'lowdb'
 import { JSONFile, JSONFileSync } from 'lowdb/node'
+//https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 
 
 const db = new Low(new JSONFileSync('db.json'), {Users:[]})
