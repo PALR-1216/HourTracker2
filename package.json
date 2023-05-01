@@ -4,15 +4,18 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon --ignore 'db.json' index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "lowdb": "^6.0.1",
+    "multiformats": "^9.9.0",
     "mysql": "^2.18.1",
     "nanoid": "^4.0.2",
     "nodemon": "^2.0.22"

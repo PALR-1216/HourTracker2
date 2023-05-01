@@ -9,7 +9,15 @@ import cookieParser from 'cookie-parser';
 import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
-import { render } from 'ejs';
+import cors from 'cors'
+import { Low } from 'lowdb'
+import { JSONFile, JSONFileSync } from 'lowdb/node'
+
+
+const db = new Low(new JSONFileSync('db.json'), {Users:[]})
+await db.read()
+await db.write();
+
 
 app.set('trust proxy', 1);
 app.set('views', path.join("views"));
@@ -36,10 +44,12 @@ app.use(session({
 
 
 
-app.get('/', (req, res) => {
-  // res.render('Login');
 
+app.get('/', async(req, res) => {
+  // res.render('Login');
+  
   if(req.cookies.user_id) {
+    res.render("DashBoard")
 
   }
 
@@ -50,21 +60,63 @@ app.get('/', (req, res) => {
 
 
 app.post('/LoginAuth', (req,res) =>{
+  let name = req.body.userName;
+  let pass = req.body.password;
 
+  if(name == "senpai" && pass == "senpai") {
+    res.cookie("user_id", nanoid());
+    res.redirect('/')
+
+  }
+
+  else{
+    res.redirect('/')
+  }
 })
 
 
 
 app.get('/signUp', (req,res) =>{
+
   res.render('SignUp')
+
+})
+
+
+app.post('/SignUpAuth', (req,res) =>{
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
   let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
   let date = ("0" + dateObj.getDate()).slice(-2);
   let AllDate = year + "/" + month + "/" + date
+
+  let userName = req.body.userName;
+  let email = req.body.Email;
+  let wage = Number(req.body.Wage);
+  res.json(wage)
+
+
 })
 
+
+
+
+app.get('/logout', (req, res, next) => {
+
+  // req.session.destroy();
+
+  let cookie = req.cookies;
+  for (var prop in cookie) {
+      if (!cookie.hasOwnProperty(prop)) {
+          continue;
+      }
+      res.cookie(prop, '', {
+          expires: new Date(0)
+      });
+  }
+  res.redirect('/');
+})
 
 
 app.listen(3000, () => {
