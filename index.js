@@ -17,7 +17,7 @@ import { JSONFile, JSONFileSync } from 'lowdb/node'
 
 const db = new Low(new JSONFileSync('db.json'), {Users:[]})
 await db.read()
-await db.write();
+// await db.write();
 
 
 app.set('trust proxy', 1);
