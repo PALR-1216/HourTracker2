@@ -100,7 +100,8 @@ app.post('/SignUpAuth', (req,res) =>{
     usersWage:Number(req.body.Wage),
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
-    userOvertimeType:null
+    userOvertimeType:null,
+    userProfilePic: req.body.profilePic
   }
 
   if(req.body.overtimeType == "0.5") {
