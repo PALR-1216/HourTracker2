@@ -105,16 +105,15 @@ app.post('/SignUpAuth', (req,res) =>{
   if(req.body.Half) {
 
     console.log("half")
+    //add to database half
 
   }
 
   else if(read.body.Double) {
     console.log("Double")
+    //add to database Double
 
   }
-
-
-  
 })
 
 
