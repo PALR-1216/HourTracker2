@@ -99,11 +99,22 @@ app.post('/SignUpAuth', (req,res) =>{
     usersWage:Number(req.body.Wage),
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
+  }
+  
 
+  if(req.body.Half) {
+
+    console.log("half")
 
   }
 
-  res.json(userObject)
+  else if(read.body.Double) {
+    console.log("Double")
+
+  }
+
+
+  
 })
 
 
