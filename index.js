@@ -96,11 +96,14 @@ app.post('/SignUpAuth', (req,res) =>{
     userID:nanoid(),
     userName:req.body.userName,
     Email:req.body.Email,
-    usersWage:Number(req.body.Wage)
+    usersWage:Number(req.body.Wage),
+    usersDeduction:Number(req.body.Deduction) / 100,
+    usersPassword:req.body.Password,
+
 
   }
 
-
+  res.json(userObject)
 })
 
 
