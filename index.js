@@ -15,8 +15,8 @@ import { JSONFile, JSONFileSync } from 'lowdb/node'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 
 
-const db = new Low(new JSONFileSync('db.json'), {Users:[]})
-await db.read()
+// const db = new Low(new JSONFileSync('db.json'), {Users:[]})
+// await db.read()
 // await db.write();
 
 
@@ -94,26 +94,27 @@ app.post('/SignUpAuth', (req,res) =>{
 
   let userObject = {
     userID:nanoid(),
+    dateAdded:AllDate,
     userName:req.body.userName,
     Email:req.body.Email,
     usersWage:Number(req.body.Wage),
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
+    userOvertimeType:null
+  }
+
+  if(req.body.overtimeType == "0.5") {
+    userObject.userOvertimeType = Number(0.5);
+  }
+
+  else if(req.body.overtimeType == "2") {
+    userObject.userOvertimeType = Number(2)
   }
   
 
-  if(req.body.Half) {
+ 
 
-    console.log("half")
-    //add to database half
-
-  }
-
-  else if(read.body.Double) {
-    console.log("Double")
-    //add to database Double
-
-  }
+  res.json(userObject)
 })
 
 
