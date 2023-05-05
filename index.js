@@ -78,9 +78,7 @@ app.post('/LoginAuth', (req,res) =>{
 
 
 app.get('/signUp', (req,res) =>{
-
   res.render('SignUp')
-
 })
 
 
@@ -92,10 +90,15 @@ app.post('/SignUpAuth', (req,res) =>{
   let date = ("0" + dateObj.getDate()).slice(-2);
   let AllDate = year + "/" + month + "/" + date
 
-  let userName = req.body.userName;
-  let email = req.body.Email;
-  let wage = Number(req.body.Wage);
-  res.json(wage)
+  
+
+  let userObject = {
+    userID:nanoid(),
+    userName:req.body.userName,
+    Email:req.body.Email,
+    usersWage:Number(req.body.Wage)
+
+  }
 
 
 })
