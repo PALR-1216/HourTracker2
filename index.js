@@ -9,9 +9,8 @@ import cookieParser from 'cookie-parser';
 import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
-import cors from 'cors'
-import { Low } from 'lowdb'
-import { JSONFile, JSONFileSync } from 'lowdb/node'
+import multer from 'multer'
+
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 
 
@@ -26,6 +25,9 @@ app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+
+
+const Uploader = multer({storage:multer.memoryStorage()});
 
 //make a login System in node with sessions and mysql 
 app.use(cookieParser());
@@ -82,7 +84,7 @@ app.get('/signUp', (req,res) =>{
 })
 
 
-app.post('/SignUpAuth', (req,res) =>{
+app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
@@ -101,7 +103,7 @@ app.post('/SignUpAuth', (req,res) =>{
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
     userOvertimeType:null,
-    userProfilePic: req.body.profilePic
+    userProfilePic: req.file.buffer.toString('binary') || null
   }
 
   if(req.body.overtimeType == "0.5") {
@@ -110,6 +112,10 @@ app.post('/SignUpAuth', (req,res) =>{
 
   else if(req.body.overtimeType == "2") {
     userObject.userOvertimeType = Number(2)
+  }
+
+  else{
+    userObject.userOvertimeType = Number(0.5)
   }
   
 
