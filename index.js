@@ -125,6 +125,25 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
 })
 
 
+app.post('/calculateHours', (req,res) =>{
+    let checkIn = req.body.checkIn;
+    let clockOut = req.body.clockOut;
+
+    let obj = {
+      enter: checkIn,
+      out: clockOut,
+      startBreak: '',
+      endBreak: '',
+    };
+
+    if (req.body.startBreak && req.body.endBreak) {
+      obj.startBreak = req.body.startBreak;
+      obj.endBreak = req.body.endBreak;
+    }
+
+    res.json(obj);
+})
+
 
 
 app.get('/logout', (req, res, next) => {

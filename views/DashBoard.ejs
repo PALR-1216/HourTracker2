@@ -1,3 +1,5 @@
+<%- include("_navbar") -%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +9,21 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hello user</h1>
+    <form method="POST" action="/calculateHours">
+        <label for="checkIn">Enter the first Hour</label>
+        <input required type="time" name="checkIn" />
+        <label for="clockOut">Enter the second Hour</label>
+        <input required type="time" name="clockOut" />
+  
+        <h3>Add break</h3>
+        <label for="startBreak">Start break time </label>
+        <input  type="time" name="startBreak" />
+        <label for="endBreak">End Break time</label>
+        <input  type="time" name="endBreak" />
+        
+        <button type="submit">Send Data</button>
+      </form>
+  
     <a href="/logout">Log out</a>
     
 </body>
