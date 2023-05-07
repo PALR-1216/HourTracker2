@@ -26,6 +26,28 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
+function connectDB() {
+
+    let conn = mysql.createConnection({
+      host:"localhost",
+      user:"root",
+      password:"root",
+      database:"HourTracker2",
+      port:8889
+  })
+
+  conn.connect((err) => {
+    if (err) {
+        console.log(err.message)
+    }
+
+    console.log("database connected");
+  })
+
+}
+
+
+
 
 const Uploader = multer({storage:multer.memoryStorage()});
 
@@ -52,7 +74,8 @@ app.get('/', async(req, res) => {
   // res.render('Login');
   
   if(req.cookies.user_id) {
-    res.render("DashBoard")
+    // res.render("DashBoard")
+    res.render('test1')
 
   }
 
@@ -103,7 +126,7 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
     userOvertimeType:null,
-    userProfilePic: req.file.buffer.toString('binary') || null
+    userProfilePic: req.file.buffer.toString('base64') || null
   }
 
   if(req.body.overtimeType == "0.5") {
