@@ -3,7 +3,7 @@ const app = express();
 import mysql from 'mysql';
 import session from 'cookie-session';
 import bodyParser from 'body-parser';
-import path from 'path';
+import path, { basename } from 'path';
 import bcryptjs from 'bcryptjs';
 import cookieParser from 'cookie-parser';
 import Jsontoken from 'jsonwebtoken';
@@ -125,24 +125,23 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     usersWage:Number(req.body.Wage),
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
-    userOvertimeType:null,
-    userProfilePic: req.file.buffer.toString('base64') || null
+    OvertimeType:null,
+    // userProfilePic: req.file.buffer.toString('base64') || null
+    userProfilePic:null
   }
-
-  if(req.body.overtimeType == "0.5") {
-    userObject.userOvertimeType = Number(0.5);
-  }
-
-  else if(req.body.overtimeType == "2") {
-    userObject.userOvertimeType = Number(2)
-  }
-
-  else{
-    userObject.userOvertimeType = Number(0.5)
-  }
-  
 
  
+
+  if(req.body.OvertimeType == "Half") {
+    userObject.OvertimeType = Number(0.5);
+    // res.json("half")
+  }
+
+  else if(req.body.OvertimeType == "Double") {
+    userObject.OvertimeType = Number(2)
+    // res.json("double")
+  }
+
 
   res.json(userObject)
 })
