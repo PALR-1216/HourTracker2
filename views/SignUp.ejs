@@ -54,7 +54,7 @@
         </div>
 
         <!-- Radio Buttons -->
-        <div class="flex gap-10">
+        <!-- <div class="flex gap-10">
           <div class="inline-flex items-center">
             <h5>Whats your overtime type?</h5>
             <label class="relative flex cursor-pointer items-center rounded-full p-3" for="Half"
@@ -87,70 +87,92 @@
             </label>
           </div>
         </div>
-
-
-        <!-- end of radio b utton -->
-
-
-
-
-
-        <!-- Radio Buttons -->
-        <div class="flex gap-10">
-          <div class="inline-flex items-center">
-            <h5>Check Shedule?</h5>
-            <label class="relative flex cursor-pointer items-center rounded-full p-3" for="weekly"
-              data-ripple-dark="true">
-              <input id="Shedule" name="SheduleType" type="radio" value="0.5" />
-              <div
-                class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                  <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                </svg>
-              </div>
-            </label>
-            <label class="mt-px cursor-pointer select-none font-light text-gray-700" for="Half">
-              Weekly
-            </label>
-
-          </div>
-          <div class="inline-flex items-center">
-            <label class="relative flex cursor-pointer items-center rounded-full p-3" for="Bi-weekly"
-              data-ripple-dark="true">
-              <input id="Shedule" name="SheduleType" type="radio" value="2" />
-              <div
-                class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                  <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                </svg>
-              </div>
-            </label>
-            <label class="mt-px cursor-pointer select-none font-light text-gray-700" for="Double">
-              Bi-weekly
-            </label>
-          </div>
-
-          <div class="inline-flex items-center">
-            <label class="relative flex cursor-pointer items-center rounded-full p-3" for="Monthly"
-              data-ripple-dark="true">
-              <input id="Shedule" name="SheduleType" type="radio" value="2" />
-              <div
-                class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                  <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                </svg>
-              </div>
-            </label>
-            <label class="mt-px cursor-pointer select-none font-light text-gray-700" for="Monthly">
-              Monthly
-            </label>
-          </div>
-        </div>
-
+ -->
 
         <!-- end of radio b utton -->
 
 
+
+        <main class="">
+          <!-- tabs -->
+          <label >Whats your overtime type?</label>
+          <br/>
+          
+          
+          <div
+            class="grid w-[24rem] grid-cols-2 space-x-2 rounded-xl bg-gray-200 p-2"
+            x-data="app"
+          >
+            <div>
+              <input type="radio" name="OvertimeType" id="Half" class="peer hidden" checked />
+              <label
+                for="Half"
+                class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+                >Time and Half</label
+              >
+            </div>
+        
+            <div>
+              <input type="radio" name="OvertimeType" id="Double" class="peer hidden" />
+              <label
+                for="Double"
+                class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+                > Double Time</label
+              >
+            </div>
+          </div>
+        </main>
+
+
+
+        <main class="">
+          <!-- tabs -->
+          <label >Payment Shedule</label>
+          <br/>
+          
+          
+          <div
+            class="grid w-[24rem] grid-cols-3 space-x-2 rounded-xl bg-gray-200 p-2"
+            x-data="app"
+          >
+            <div>
+              <input type="radio" name="PaymentType" id="Week" class="peer hidden" checked />
+              <label
+                for="Week"
+                class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+                >Weekly</label
+              >
+            </div>
+        
+            <div>
+              <input type="radio" name="PaymentType" id="2Week" class="peer hidden" />
+              <label
+                for="2Week"
+                class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+                >Biweekly</label
+              >
+            </div>
+        
+            <div>
+              <input type="radio" name="PaymentType" id="Monthly" class="peer hidden" />
+              <label
+                for="Monthly"
+                class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+                >Monthly</label
+              >
+            </div>
+        
+            
+          </div>
+        </main>
+
+
+
+
+        
+
+
+        
 
 
 
