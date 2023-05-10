@@ -128,8 +128,10 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
     OvertimeType:null,
+    userDateOfCheck: req.body.DateOfCheck,
     userPaymentRate: null,
     userProfilePic:null
+
   }
 
   if(req.file !== undefined) {
