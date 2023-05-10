@@ -130,6 +130,10 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     userProfilePic:null
   }
 
+  if(req.file !== undefined) {
+    userObject.userProfilePic = req.file.buffer.toString('base64');
+  }
+  
  
 
   if(req.body.OvertimeType == "Half") {
