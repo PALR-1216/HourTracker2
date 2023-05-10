@@ -46,6 +46,8 @@ function connectDB() {
 
 }
 
+// connectDB()
+
 
 
 
@@ -126,14 +128,15 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     usersDeduction:Number(req.body.Deduction) / 100,
     usersPassword:req.body.Password,
     OvertimeType:null,
-    // userProfilePic: req.file.buffer.toString('base64') || null
+    userPaymentRate: null,
     userProfilePic:null
   }
 
   if(req.file !== undefined) {
     userObject.userProfilePic = req.file.buffer.toString('base64');
+
   }
-  
+
  
 
   if(req.body.OvertimeType == "Half") {
@@ -145,6 +148,20 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
     userObject.OvertimeType = Number(2)
     // res.json("double")
   }
+
+  if(req.body.PaymentRate == "Weekly") {
+    userObject.userPaymentRate = "Weekly";
+  }
+
+  else if(req.body.PaymentRate == "Biweekly") {
+    userObject.userPaymentRate = "Biweekly";
+  }
+
+	else{
+		userObject.userPaymentRate = "Monthly"
+	}
+
+ 
 
 
   res.json(userObject)
