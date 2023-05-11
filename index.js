@@ -76,8 +76,8 @@ app.get('/', async(req, res) => {
   // res.render('Login');
   
   if(req.cookies.user_id) {
-    // res.render("DashBoard")
-    res.render('test1')
+    res.render("DashBoard")
+    // res.render('test1')
 
   }
 
