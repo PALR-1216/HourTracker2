@@ -10,7 +10,7 @@ import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
 import multer from 'multer'
-
+import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 
 
@@ -136,6 +136,7 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
 
   if(req.file !== undefined) {
     userObject.userProfilePic = req.file.buffer.toString('base64');
+ 
 
   }
 
