@@ -10,6 +10,7 @@ import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
 import multer from 'multer'
+import sharp from 'sharp';
 // import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 
@@ -76,8 +77,8 @@ app.get('/', async(req, res) => {
   // res.render('Login');
   
   if(req.cookies.user_id) {
-    res.render("DashBoard")
-    // res.render('test1')
+    // res.render("DashBoard")
+    res.render('test1')
 
   }
 
@@ -109,7 +110,7 @@ app.get('/signUp', (req,res) =>{
 })
 
 
-app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
+app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
@@ -135,8 +136,33 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), (req,res) =>{
   }
 
   if(req.file !== undefined) {
-    userObject.userProfilePic = req.file.buffer.toString('base64');
- 
+  
+    const buffer = req.file.buffer;
+    sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
+
+          let image = Buffer.from(data).toString('base64');
+
+          // let userObject = {
+          //   userID:nanoid(),
+          //   dateAdded:AllDate,
+          //   userName:req.body.userName,
+          //   Email:req.body.Email,
+          //   usersWage:Number(req.body.Wage),
+          //   usersDeduction:Number(req.body.Deduction) / 100,
+          //   usersPassword:req.body.Password,
+          //   OvertimeType:null,
+          //   userDateOfCheck: req.body.DateOfCheck,
+          //   userPaymentRate: null,
+          //   userProfilePic:image
+        
+          // }
+
+          userObject.userProfilePic = String(image)
+
+          // res.json(userObject)
+          // TODO:add image to database
+    
+    })
 
   }
 
