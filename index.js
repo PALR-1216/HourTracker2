@@ -47,7 +47,7 @@ function connectDB() {
 
 }
 
-// connectDB()
+connectDB()
 
 
 
