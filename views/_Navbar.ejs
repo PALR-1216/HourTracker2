@@ -23,11 +23,20 @@
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
              <!-- <img src=""  style="" class="rounded-circle">  -->
-             <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 60px;"
+             <% if(UserProfile === "null"){ %>
+              <img src="https://cdn.onlinewebfonts.com/svg/img_264570.png" class="rounded-circle" style="width: 45px;"
   alt="Avatar" />
-  
-        
+  <%}else {%>
+
+
+    <img src="data:image/png;base64, <%=UserProfile%>" class="rounded-circle" style="width: 45px;"
+    alt="Avatar" />
+
+  <%}%>
+
+  <h5 class="offcanvas-body" style="padding-bottom: 10px;" id="offcanvasLabel"><%=user%></h5>
            
+        
         
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -37,11 +46,16 @@
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="#">add Hour</a>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link " style="color: red" href="/DeleteAccount">Delete Account</a>
+            </li>
+
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Dropdown
@@ -53,6 +67,9 @@
                   <hr class="dropdown-divider">
                 </li>
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
+
+               
+
               </ul>
             </li>
           </ul>

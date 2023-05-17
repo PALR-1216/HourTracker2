@@ -27,7 +27,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-function connectDB() {
 
     let conn = mysql.createConnection({
       host:"localhost",
@@ -45,11 +44,7 @@ function connectDB() {
     console.log("database connected");
   })
 
-}
-
-connectDB()
-
-
+  let image;
 
 
 const Uploader = multer({storage:multer.memoryStorage()});
@@ -73,13 +68,28 @@ app.use(session({
 
 
 
-app.get('/', async(req, res) => {
+app.get('/', (req, res) => {
   // res.render('Login');
   
   if(req.cookies.user_id) {
-    // res.render("DashBoard")
-    res.render('test1')
+    // res.json(req.cookies.user_id)
 
+    conn.query(`select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`, (err,rows) =>{
+      if(rows <= 0){
+        // res.render("Signup")
+        res.render("LandingPage")
+      }
+      else{
+        res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
+
+      }
+
+
+
+      
+
+    })
+    // res.render("DashBoard")
   }
 
   else{
@@ -87,20 +97,48 @@ app.get('/', async(req, res) => {
   }
 });
 
+app.get('/Login',(req,res) =>{
+  res.render("Login")
+})
+
+
+
 
 app.post('/LoginAuth', (req,res) =>{
   let name = req.body.userName;
   let pass = req.body.password;
+  
+  let checkUser = `select User_id, Users_Password from users where User_Name ='${name}'`;
+  conn.query(checkUser, (err,rows) =>{
+    if(err) throw err;
 
-  if(name == "senpai" && pass == "senpai") {
-    res.cookie("user_id", nanoid());
-    res.redirect('/')
+    if(rows.length > 0){
+      let hash = rows[0].Users_Password;
+      bcryptjs.compare(pass, hash, (err,result) =>{
+        if(result) {
+          res.cookie("user_id", rows[0].User_id);
+          res.redirect('/')
 
-  }
+        }
+        else{
+          res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
+        }
+      })
+    }
+    // else{
+    //   res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
+    // }
+  })
 
-  else{
-    res.redirect('/')
-  }
+  // if(name == "senpai" && pass == "senpai") {
+  //   res.cookie("user_id", nanoid());
+  //   res.redirect('/')
+
+  // }
+
+  // else{
+  //   res.redirect('/')
+  // }
 })
 
 
@@ -135,33 +173,12 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
   }
 
-  if(req.file !== undefined) {
+  if(req.file != undefined) {
   
     const buffer = req.file.buffer;
     sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
-
-          let image = Buffer.from(data).toString('base64');
-
-          // let userObject = {
-          //   userID:nanoid(),
-          //   dateAdded:AllDate,
-          //   userName:req.body.userName,
-          //   Email:req.body.Email,
-          //   usersWage:Number(req.body.Wage),
-          //   usersDeduction:Number(req.body.Deduction) / 100,
-          //   usersPassword:req.body.Password,
-          //   OvertimeType:null,
-          //   userDateOfCheck: req.body.DateOfCheck,
-          //   userPaymentRate: null,
-          //   userProfilePic:image
-        
-          // }
-
-          userObject.userProfilePic = String(image)
-
-          // res.json(userObject)
-          // TODO:add image to database
-    
+          image = Buffer.from(data).toString('base64');  
+          res.json(image)
     })
 
   }
@@ -191,10 +208,45 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 	}
 
  
+  let CheckUserName = `select * from Users where User_Email = '${userObject.Email}' or User_Name ='${userObject.userName}'`;
+  conn.query(CheckUserName, (err,rows) =>{
+    if(rows.length > 0) {
+      res.send("<script>alert(`UserName or Email already exist`);  javascript:history.go(-1);</script>");
+    }
+    else{
+       // res.json(userObject)
+        bcryptjs.genSalt(5, (err,salt) =>{
+          bcryptjs.hash(userObject.usersPassword, salt, (err,hash) =>{
+            let weekDate = req.body.DateOfCheck;
+            let sql = `insert into Users Values ('${userObject.userID}','${userObject.userName}', '${userObject.Email}', ${userObject.usersWage}, ${userObject.usersDeduction}, '${userObject.OvertimeType}', '${userObject.userPaymentRate}', '${image || null}', '${hash}', '${AllDate}');`;
+            
+
+            conn.query(sql, (err,rows) =>{
+              if(err) {throw err.message};
+              console.log(rows)
+              // res.send("<script>alert(`Your Account was created Please Login`); </script>")
+              
+            })
+
+            res.redirect('/Login')
+            
+            
+
+          })
+        })
+      }
+
+  })
 
 
-  res.json(userObject)
+ 
+
+  
+
+  // conn.query(sql)
+
 })
+
 
 
 app.post('/calculateHours', (req,res) =>{
@@ -235,6 +287,30 @@ app.get('/logout', (req, res, next) => {
 })
 
 
+app.get('/DeleteAccount', (req,res) =>{
+
+  if(req.cookies.user_id != null) {
+    res.render("DeleteAccount")
+  }
+
+  else {
+    res.redirect('/')
+  }
+})
+
+app.post('/DeleteAccount',(req,res) =>{
+  if(req.body.password != null) {
+
+    let sql = `delete from Users where User_id = "${req.cookies.user_id}";`
+    conn.query(sql,(err,rows) =>{
+      if(err) throw err;
+      res.redirect('/')
+    })
+  }
+})
+
+
 app.listen(3000, () => {
   console.log('server running in port 3000');
 });
+
