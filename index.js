@@ -13,7 +13,8 @@ import multer from 'multer'
 import sharp from 'sharp';
 // import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
-
+//https://dev.to/arbaoui_mehdi/how-to-access-the-mysql-cli-with-mamp-25m
+//Connect to database with MAMP on cli with mysql -uroot -proot
 
 // const db = new Low(new JSONFileSync('db.json'), {Users:[]})
 // await db.read()
@@ -120,14 +121,14 @@ app.post('/LoginAuth', (req,res) =>{
           res.redirect('/')
 
         }
-        else{
-          res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
-        }
+        // else{
+        //   res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
+        // }
       })
     }
-    // else{
-    //   res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
-    // }
+    else{
+      res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
+    }
   })
 
   // if(name == "senpai" && pass == "senpai") {
@@ -180,7 +181,6 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
           image = Buffer.from(data).toString('base64');  
           res.json(image)
     })
-
   }
 
  
@@ -223,17 +223,16 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
             conn.query(sql, (err,rows) =>{
               if(err) {throw err.message};
-              console.log(rows)
-              // res.send("<script>alert(`Your Account was created Please Login`); </script>")
+              console.log(rows)              
               
+              // res.redirect('/')
+              // res.json("added")
+              res.redirect('/')
             })
-
-            res.redirect('/Login')
-            
-            
-
           })
+          
         })
+
       }
 
   })

@@ -29,8 +29,11 @@
   <%}else {%>
 
 
-    <img src="data:image/png;base64, <%=UserProfile%>" class="rounded-circle" style="width: 45px;"
-    alt="Avatar" />
+    <div class="ratio ratio-1x1 rounded-circle overflow-hidden" style="width: 80px;">
+      <img src="data:image/png;base64, <%=UserProfile%>" class="" style="" alt="Avatar" />
+    </div>
+    <!-- <img src="data:image/png;base64, <%=UserProfile%>" class="rounded-circle" style="width: 50px;"
+    alt="Avatar" /> -->
 
   <%}%>
 
