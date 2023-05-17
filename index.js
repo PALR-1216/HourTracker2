@@ -74,22 +74,22 @@ app.get('/', (req, res) => {
   
   if(req.cookies.user_id) {
     // res.json(req.cookies.user_id)
-
-    conn.query(`select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`, (err,rows) =>{
-      if(rows <= 0){
-        // res.render("Signup")
-        res.render("LandingPage")
-      }
-      else{
-        res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
-
-      }
-
-
-
-      
-
+    let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
+    conn.query(sql, (err,rows) =>{
+      res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
     })
+
+    // conn.query(`select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`, (err,rows) =>{
+    //   if(rows <= 0){
+    //     // res.render("Signup")
+    //     res.render("LandingPage")
+    //   }
+    //   else{
+    //     res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
+
+    //   }
+
+    // })
     // res.render("DashBoard")
   }
 
