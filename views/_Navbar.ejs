@@ -22,25 +22,11 @@
       </button>
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
-             <!-- <img src=""  style="" class="rounded-circle">  -->
-             <% if(UserProfile === "null"){ %>
-              <img src="https://cdn.onlinewebfonts.com/svg/img_264570.png" class="rounded-circle" style="width: 45px;"
-  alt="Avatar" />
-  <%}else {%>
 
-
-    <div class="ratio ratio-1x1 rounded-circle overflow-hidden" style="width: 80px;">
-      <img src="data:image/png;base64, <%=UserProfile%>" class="" style="" alt="Avatar" />
-    </div>
-    <!-- <img src="data:image/png;base64, <%=UserProfile%>" class="rounded-circle" style="width: 50px;"
-    alt="Avatar" /> -->
-
-  <%}%>
-
-  <h5 class="offcanvas-body" style="padding-bottom: 10px;" id="offcanvasLabel"><%=userName%></h5>
-           
-        
-        
+          <a class="navbar-brand" href="#">
+            <img src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            Hour Tracker
+          </a>
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 

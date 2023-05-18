@@ -45,7 +45,6 @@ app.use(bodyParser.urlencoded({
     console.log("database connected");
   })
 
-  let image;
 
 
 const Uploader = multer({storage:multer.memoryStorage()});
@@ -71,35 +70,35 @@ app.use(session({
 
 app.get('/', (req, res) => {
   // res.render('Login');
+  if(req.cookies.user_id === null) {
+    res.redirect('/LandingPage')
+  }
+
   
-  if(req.cookies.user_id) {
+  else if(req.cookies.user_id) {
     // res.json(req.cookies.user_id)
-    let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
-    conn.query(sql, (err,rows) =>{
-      res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
-    })
+    try {
 
-    // conn.query(`select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`, (err,rows) =>{
-    //   if(rows <= 0){
-    //     // res.render("Signup")
-    //     res.render("LandingPage")
-    //   }
-    //   else{
-    //     res.render('test1', {userName:rows[0].User_Name, UserProfile: rows[0].Users_ProfileImage})
+      // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
 
-    //   }
-
-    // })
-    // res.render("DashBoard")
+        res.render('test1')
+      
+    } catch (error) {
+      console.log("error")
+    }
   }
 
   else{
-    res.render("Login")
+    res.render('Login')
   }
 });
 
 app.get('/Login',(req,res) =>{
   res.render("Login")
+})
+
+app.get('/LandingPage', (req,res) =>{
+  res.render("LandingPage")
 })
 
 
@@ -150,6 +149,7 @@ app.get('/signUp', (req,res) =>{
 
 
 app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
+  let image;
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
@@ -174,12 +174,14 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
   }
 
-  if(req.file != undefined) {
+  if(req.file !== undefined) {
   
-    const buffer = req.file.buffer;
+    let buffer = req.file.buffer;
+    // console.log(buffer.toString('base64'))
+
     sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
           image = Buffer.from(data).toString('base64');  
-          res.json(image)
+          console.log(Buffer.from(data).toString('base64'));
     })
   }
 
@@ -225,10 +227,9 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
               if(err) {throw err.message};
               console.log(rows)              
               
-              // res.redirect('/')
-              // res.json("added")
-              res.redirect('/')
+              
             })
+            res.redirect('/')
           })
           
         })
@@ -301,11 +302,44 @@ app.post('/DeleteAccount',(req,res) =>{
   if(req.body.password != null) {
 
     let sql = `delete from Users where User_id = "${req.cookies.user_id}";`
+    
     conn.query(sql,(err,rows) =>{
       if(err) throw err;
-      res.redirect('/')
+
+      let cookie = req.cookies;
+      for (var prop in cookie) {
+          if (!cookie.hasOwnProperty(prop)) {
+              continue;
+          }
+          res.cookie(prop, '', {
+              expires: new Date(0)
+          });
+      }
+      res.redirect('/');
     })
   }
+})
+
+
+
+// -------ADMIN---------
+
+app.get('/api/:Admin', (req,res) =>{
+  if(req.params.Admin === "Senpai") {
+      conn.query('select * from Users', (err,rows) =>{
+        if(err) throw err;
+    
+        res.json(rows)
+      })
+  }
+  else{
+    res.redirect('/')
+
+    
+
+  }
+
+  
 })
 
 
