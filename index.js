@@ -70,7 +70,7 @@ app.use(session({
 
 app.get('/', (req, res) => {
   // res.render('Login');
-  if(req.cookies.user_id === null) {
+  if(req.cookies.user_id == null) {
     res.redirect('/LandingPage')
   }
 
@@ -78,7 +78,6 @@ app.get('/', (req, res) => {
   else if(req.cookies.user_id) {
     // res.json(req.cookies.user_id)
     try {
-
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
 
         res.render('test1')
@@ -96,6 +95,8 @@ app.get('/', (req, res) => {
 app.get('/Login',(req,res) =>{
   res.render("Login")
 })
+
+//show The Landing page
 
 app.get('/LandingPage', (req,res) =>{
   res.render("LandingPage")
