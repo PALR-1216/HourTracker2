@@ -15,6 +15,7 @@ import sharp from 'sharp';
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 //https://dev.to/arbaoui_mehdi/how-to-access-the-mysql-cli-with-mamp-25m
 //Connect to database with MAMP on cli with mysql -uroot -proot
+//https://geekflare.com/nodejs-hosting-platform/#:~:text=12%20Best%20Hosting%20Platform%20for%20Node.js%20Application%201,Platform.sh%20...%207%20NodeChef%20...%208%20Azure%20
 
 // const db = new Low(new JSONFileSync('db.json'), {Users:[]})
 // await db.read()
