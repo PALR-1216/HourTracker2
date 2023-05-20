@@ -1,6 +1,8 @@
 <html>
 
 <head>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,8 +16,7 @@
 
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-        alt="Your Company">
+        <lottie-player class="mx-auto h-10 w-auto" id="Logo" src="https://assets8.lottiefiles.com/packages/lf20_zw0djhar.json"  background="transparent"  speed="1"    loop  autoplay></lottie-player>
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Become a Member</h2>
     </div>
 
@@ -170,6 +171,8 @@
         </div>
       </form>
 
+      
+
       <p class="mt-10 text-center text-sm text-gray-500">
         Already a Member?
         <a href="/" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login</a>
@@ -177,6 +180,28 @@
     </div>
   </div>
 
+
+  <style>
+
+@media only screen and (max-width: 600px) {
+  #Logo {
+
+    width: 250px;
+    height: 250px;
+
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  #Logo {
+
+    width: 320px;
+    height: 320px;
+
+  }
+}
+    
+  </style>
 
 
 </body>
