@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
 
     <meta charset="utf-8" />
     <meta
@@ -61,7 +64,7 @@
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container px-5 position-relative">
-          <h1 class="masthead-heading mb-0">Seize The Moments</h1>
+          <h1 class="masthead-heading mb-0"><strong>Seize The Moments</strong></h1>
           <h2 class="masthead-subheading mb-0">Count Your Hours Wisely!</h2>
           <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#scroll"
             >Learn More</a
@@ -74,15 +77,41 @@
       <div class="bg-circle-4 bg-circle"></div>
     </header>
     <!-- Content section 1-->
+
+    <div class="container">
+
+    </section>
+    <section class="pb-5 pt-5">
+        <div class="container pb-4 pt-4">
+            <div class="align-items-center row">
+                <div class="col-lg-6 ms-auto order-lg-2 py-3 text-center">
+                    <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_P6iSQdant2.json" background="transparent" speed="1" style="width: 100%; height: auto;" loop autoplay></lottie-player>
+                </div>
+                <div class="col-lg-5 order-lg-1 py-3">
+                    <h2 class="fw-normal h1 mb-2 text-dark">We analyze our services from every direction</h2>
+                    <p class="fw-light mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae congue tortor. Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit dolore cillum minim tempor enim</p>
+                </div>
+            </div>
+        </div>
+        <div class="container pb-4 pt-4">
+            <div class="align-items-center row">
+                <div class="col-lg-6 me-lg-3 pb-3 pt-3 text-center">
+                    <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_yfsxyqxp.json" background="transparent" speed="1" style="width: 100%; height: auto;" loop autoplay></lottie-player>
+                </div>
+                <div class="col-lg-5 pb-3 pt-3">
+                    <h2 class="fw-normal h1 mb-2 text-dark">Our proven system is made to succeed</h2>
+                    <p class="fw-light mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae congue tortor. Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit dolore cillum minim tempor enim</p>
+                </div>
+            </div>
+        </div>
+    </section>
+     
+      
+    </div>
+
     
     <!-- Footer-->
-    <footer class="py-5 bg-black">
-      <div class="container px-5">
-        <p class="m-0 text-center text-black small">
-          Copyright &copy; Hour Tracker 2023
-        </p>
-      </div>
-    </footer>
+    
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
@@ -91,18 +120,6 @@
 
   <style>
 
-
-    /*!
-    * Start Bootstrap - One Page Wonder v6.0.6 (https://startbootstrap.com/theme/one-page-wonder)
-    * Copyright 2013-2023 Start Bootstrap
-    * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-one-page-wonder/blob/master/LICENSE)
-    */
-    /*!
-     * Bootstrap  v5.2.3 (https://getbootstrap.com/)
-     * Copyright 2011-2022 The Bootstrap Authors
-     * Copyright 2011-2022 Twitter, Inc.
-     * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-     */
     :root {
       --bs-blue: #0d6efd;
       --bs-indigo: #6610f2;
@@ -197,13 +214,6 @@
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    hr {
-      margin: 1rem 0;
-      color: inherit;
-      border: 0;
-      border-top: 1px solid;
-      opacity: 0.25;
-    }
 
     h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
       margin-top: 0;
@@ -212,93 +222,6 @@
       font-weight: 800;
       line-height: 1.2;
     }
-
-    h1, .h1 {
-      font-size: calc(1.375rem + 1.5vw);
-    }
-    @media (min-width: 1200px) {
-      h1, .h1 {
-        font-size: 2.5rem;
-      }
-    }
-
-    h2, .h2 {
-      font-size: calc(1.325rem + 0.9vw);
-    }
-    @media (min-width: 1200px) {
-      h2, .h2 {
-        font-size: 2rem;
-      }
-    }
-
-    h3, .h3 {
-      font-size: calc(1.3rem + 0.6vw);
-    }
-    @media (min-width: 1200px) {
-      h3, .h3 {
-        font-size: 1.75rem;
-      }
-    }
-
-    h4, .h4 {
-      font-size: calc(1.275rem + 0.3vw);
-    }
-    @media (min-width: 1200px) {
-      h4, .h4 {
-        font-size: 1.5rem;
-      }
-    }
-
-    h5, .h5 {
-      font-size: 1.25rem;
-    }
-
-    h6, .h6 {
-      font-size: 1rem;
-    }
-
-    p {
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-
-
-    address {
-      margin-bottom: 1rem;
-      font-style: normal;
-      line-height: inherit;
-    }
-
-    ol,
-    ul {
-      padding-left: 2rem;
-    }
-
-    ol,
-    ul,
-    dl {
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-
-    ol ol,
-    ul ul,
-    ol ul,
-    ul ol {
-      margin-bottom: 0;
-    }
-
-    dt {
-      font-weight: 700;
-    }
-
-    dd {
-      margin-bottom: 0.5rem;
-      margin-left: 0;
-    }
-
-    
-
 
    
     a {
@@ -311,23 +234,7 @@
 
  
 
-    .d
-    @media (min-width: 1200px) {
-      .display-5 {
-        font-size: 3rem;
-      }
-    }
 
-    .display-6 {
-      font-size: calc(1.375rem + 1.5vw);
-      font-weight: 300;
-      line-height: 1.2;
-    }
-    @media (min-width: 1200px) {
-      .display-6 {
-        font-size: 2.5rem;
-      }
-    }
 
    
 
@@ -1484,23 +1391,11 @@
 
 
     @media only screen and (max-width: 600px) {
-      #LottieImage {
-        padding-right:90px;
-        margin-rigth:30px;
-        width: 300px;
-        height: 300px;
-        
-
-      }
+      
     }
 
     @media only screen and (min-width: 600px) {
-      #LottieImage {
-
-        width: 500px;
-        height: 500px;
-
-      }
+      
     }
   </style>
 </html>
