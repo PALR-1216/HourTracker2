@@ -10,7 +10,7 @@ import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
 import multer from 'multer'
-import sharp from 'sharp';
+// import sharp from 'sharp';
 // import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 //https://dev.to/arbaoui_mehdi/how-to-access-the-mysql-cli-with-mamp-25m
@@ -42,8 +42,13 @@ app.use(bodyParser.urlencoded({
     if (err) {
         console.log(err.message)
     }
+    else{
 
+      
     console.log("database connected");
+
+    }
+
   })
 
 
@@ -101,6 +106,8 @@ app.get('/Login',(req,res) =>{
 
 app.get('/LandingPage', (req,res) =>{
   res.render("LandingPage")
+  // res.render('LandingPageTest3')
+  // res.render('LandingPage2')
 })
 
 
