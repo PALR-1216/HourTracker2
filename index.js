@@ -172,20 +172,19 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
     OvertimeType:null,
     userDateOfCheck: req.body.DateOfCheck,
     userPaymentRate: null,
-    userProfilePic:null
 
   }
 
-  if(req.file !== undefined) {
+  // if(req.file !== undefined) {
   
-    let buffer = req.file.buffer;
-    // console.log(buffer.toString('base64'))
+  //   let buffer = req.file.buffer;
+  //   // console.log(buffer.toString('base64'))
 
-    sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
-          image = Buffer.from(data).toString('base64');  
-          console.log(Buffer.from(data).toString('base64'));
-    })
-  }
+  //   sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
+  //         image = Buffer.from(data).toString('base64');  
+  //         console.log(Buffer.from(data).toString('base64'));
+  //   })
+  // }
 
  
 
@@ -222,7 +221,7 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
         bcryptjs.genSalt(5, (err,salt) =>{
           bcryptjs.hash(userObject.usersPassword, salt, (err,hash) =>{
             let weekDate = req.body.DateOfCheck;
-            let sql = `insert into Users Values ('${userObject.userID}','${userObject.userName}', '${userObject.Email}', ${userObject.usersWage}, ${userObject.usersDeduction}, '${userObject.OvertimeType}', '${userObject.userPaymentRate}', '${image || null}', '${hash}', '${AllDate}');`;
+            let sql = `insert into Users Values ('${userObject.userID}','${userObject.userName}', '${userObject.Email}', ${userObject.usersWage}, ${userObject.usersDeduction}, '${userObject.OvertimeType}', '${userObject.userPaymentRate}', '${hash}', '${AllDate}');`;
             
 
             conn.query(sql, (err,rows) =>{
@@ -247,6 +246,10 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
   // conn.query(sql)
 
+})
+
+app.get("/feedBack", (req,res) =>{
+  res.render("FeedBackPage")
 })
 
 
