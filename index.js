@@ -233,7 +233,8 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
             conn.query(sql, (err,rows) =>{
               if(err) {throw err.message};
-              console.log(rows)              
+              console.log(rows) 
+              res.send("<script>alert(`Profile was created please Login`)</script>")             
               
               
             })
@@ -353,6 +354,11 @@ app.get('/api/:Admin', (req,res) =>{
 
   
 })
+
+
+app.get('*', (req, res) => {
+  res.status(404).render('404')
+});
 
 
 app.listen(3000, () => {
