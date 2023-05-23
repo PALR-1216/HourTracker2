@@ -14,7 +14,8 @@ import multer from 'multer'
 // import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
 //https://dev.to/arbaoui_mehdi/how-to-access-the-mysql-cli-with-mamp-25m
-//Connect to database with MAMP on cli with mysql -uroot -proot
+//Connect to database with MAMP on cli with /Applications/MAMP/Library/bin/mysql -uroot -p
+
 //https://geekflare.com/nodejs-hosting-platform/#:~:text=12%20Best%20Hosting%20Platform%20for%20Node.js%20Application%201,Platform.sh%20...%207%20NodeChef%20...%208%20Azure%20
 //Back up code for stripe = ewoc-pslh-oftc-wyog-ecxz
 
@@ -130,13 +131,13 @@ app.post('/LoginAuth', (req,res) =>{
           res.redirect('/')
 
         }
-        // else{
-        //   res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
-        // }
+        else{
+          res.send("<script>alert(`UserName or password are incorrect`); window.location=`/Login`;</script>")
+        }
       })
     }
     else{
-      res.send("<script>alert(`UserName or password are incorrect`); window.location=`/`;</script>")
+      res.send("<script>alert(`UserName or password are incorrect`); window.location=`/Login`;</script>")
     }
   })
 
@@ -263,6 +264,10 @@ app.get("/feedBack", (req,res) =>{
 app.get("/AboutMe", (req,res) =>{
   res.render("AboutMe")
 })
+
+// app.get('/RemoveAds', (req,res) =>{
+//   res.render("RemoveAds")
+// })
 
 
 
