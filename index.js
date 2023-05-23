@@ -260,6 +260,10 @@ app.get("/feedBack", (req,res) =>{
   res.render("FeedBackPage")
 })
 
+app.get("/AboutMe", (req,res) =>{
+  res.render("AboutMe")
+})
+
 
 
 app.post('/calculateHours', (req,res) =>{
