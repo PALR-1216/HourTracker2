@@ -9,7 +9,14 @@ import cookieParser from 'cookie-parser';
 import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
-import multer from 'multer'
+import * as dotenv from 'dotenv';
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// import env from 'dotenv'
 // import sharp from 'sharp';
 // import sharp from 'sharp'
 //https://stackoverflow.com/questions/18441698/getting-time-difference-between-two-times-in-javascript
@@ -32,12 +39,22 @@ app.use(bodyParser.urlencoded({
 }))
 
 
-    let conn = mysql.createConnection({
-      host:"localhost",
-      user:"root",
-      password:"root",
-      database:"HourTracker2",
-      port:8889
+
+  //   let conn = mysql.createConnection({
+  //     host:"localhost",
+  //     user:"root",
+  //     password:"root",
+  //     database:"HourTracker2",
+  //     port:8889
+  // })
+
+  let conn = mysql.createConnection({
+    host:process.env.DB_HOST,
+    password:process.env.DB_PASSWORD,
+    user:process.env.DB_USER,
+    database:process.env.DB_NAME,
+
+
   })
 
   conn.connect((err) => {
@@ -55,7 +72,7 @@ app.use(bodyParser.urlencoded({
 
 
 
-const Uploader = multer({storage:multer.memoryStorage()});
+// const Uploader = multer({storage:multer.memoryStorage()});
 
 //make a login System in node with sessions and mysql 
 app.use(cookieParser());
@@ -159,7 +176,7 @@ app.get('/signUp', (req,res) =>{
 })
 
 
-app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
+app.post('/SignUpAuth', async(req,res) =>{
   let image;
 
   let dateObj = new Date();
@@ -259,6 +276,10 @@ app.post('/SignUpAuth', Uploader.single("profilePic"), async(req,res) =>{
 
 app.get("/feedBack", (req,res) =>{
   res.render("FeedBackPage")
+})
+
+app.post('/SendFeedBack', (req,res) =>{
+
 })
 
 app.get("/AboutMe", (req,res) =>{
