@@ -37,6 +37,7 @@ app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+app.use(bodyParser.json())
 
 
 
@@ -136,7 +137,7 @@ app.post('/LoginAuth', (req,res) =>{
   let name = req.body.userName;
   let pass = req.body.password;
   
-  let checkUser = `select User_id, Users_Password from users where User_Name ='${name}'`;
+  let checkUser = `select User_id, Users_Password from Users where User_Name ='${name}'`;
   conn.query(checkUser, (err,rows) =>{
     if(err) throw err;
 
@@ -176,8 +177,7 @@ app.get('/signUp', (req,res) =>{
 })
 
 
-app.post('/SignUpAuth', async(req,res) =>{
-  let image;
+app.post('/SignUpAuth', (req,res) =>{
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
@@ -187,68 +187,45 @@ app.post('/SignUpAuth', async(req,res) =>{
 
   
 
-  let userObject = {
-    userID:nanoid(),
-    dateAdded:AllDate,
-    userName:req.body.userName,
-    Email:req.body.Email,
-    usersWage:Number(req.body.Wage),
-    usersDeduction:Number(req.body.Deduction) / 100,
-    usersPassword:req.body.Password,
-    OvertimeType:null,
-    userDateOfCheck: req.body.DateOfCheck,
-    userPaymentRate: null,
+  // let userObject = {
+  //   userID:nanoid(),
+  //   dateAdded:AllDate,
+  //   userName:req.body.userName,
+  //   Email:req.body.Email,
+  //   usersWage:Number(req.body.Wage),
+  //   usersDeduction:Number(req.body.Deduction) / 100,
+  //   usersPassword:req.body.Password,
+  //   OvertimeType:null,
+  //   userDateOfCheck: req.body.DateOfCheck,
+  //   userPaymentRate: null,
 
-  }
-
-  // if(req.file !== undefined) {
-  
-  //   let buffer = req.file.buffer;
-  //   // console.log(buffer.toString('base64'))
-
-  //   sharp(buffer).resize(200).jpeg({quality:100}).toBuffer((err,data,info) =>{
-  //         image = Buffer.from(data).toString('base64');  
-  //         console.log(Buffer.from(data).toString('base64'));
-  //   })
   // }
 
- 
-
-  if(req.body.OvertimeType == "Half") {
-    userObject.OvertimeType = Number(0.5);
-    // res.json("half")
-  }
-
-  else if(req.body.OvertimeType == "Double") {
-    userObject.OvertimeType = Number(2)
-    // res.json("double")
-  }
-
-  if(req.body.PaymentRate == "Weekly") {
-    userObject.userPaymentRate = "Weekly";
-  }
-
-  else if(req.body.PaymentRate == "Biweekly") {
-    userObject.userPaymentRate = "Biweekly";
-  }
-
-	else{
-		userObject.userPaymentRate = "Monthly"
-	}
 
  
-  let CheckUserName = `select * from Users where User_Email = '${userObject.Email}' or User_Name ='${userObject.userName}'`;
+
+
+ 
+  let CheckUserName = `select * from Users where User_Email = '${req.body.Email}' or User_Name ='${req.body.userName}'`;
   conn.query(CheckUserName, (err,rows) =>{
+    // if(err) {throw err.message}
     if(rows.length > 0) {
       res.send("<script>alert(`UserName or Email already exist`);  javascript:history.go(-1);</script>");
     }
     else{
-       // res.json(userObject)
         bcryptjs.genSalt(5, (err,salt) =>{
-          bcryptjs.hash(userObject.usersPassword, salt, (err,hash) =>{
-            let weekDate = req.body.DateOfCheck;
-            let sql = `insert into Users Values ('${userObject.userID}','${userObject.userName}', '${userObject.Email}', ${userObject.usersWage}, ${userObject.usersDeduction}, '${userObject.OvertimeType}', '${userObject.userPaymentRate}', '${hash}', '${AllDate}');`;
-            
+          bcryptjs.hash(req.body.Password, salt, (err,hash) =>{
+            // if(err) {throw err.message}
+            let weekDate = req.body.EndPeriodDate;
+            let OvertimeType;
+            if(req.body.OvertimeType == "Half") {
+              OvertimeType = 0.5;
+            }
+
+            else if(req.body.OvertimeType == "Double") {
+              OvertimeType = 2;
+            }
+            let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${weekDate}', '${hash}', '${AllDate}');`;
 
             conn.query(sql, (err,rows) =>{
               if(err) {throw err.message};
@@ -256,7 +233,7 @@ app.post('/SignUpAuth', async(req,res) =>{
               
               
             })
-            res.redirect('/')
+            res.redirect('/Login')
           })
           
         })
@@ -391,7 +368,16 @@ app.get('*', (req, res) => {
 });
 
 
-app.listen(3000, () => {
+//function so the server doesent go to sleep
+setInterval(function () {
+  conn.query('SELECT 1');
+}, 5000);
+
+
+const port = process.env.PORT || 3000;
+
+
+app.listen(port, () => {
   console.log('server running in port 3000');
 });
 

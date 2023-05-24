@@ -30,7 +30,7 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="/SignUpAuth" method="POST" name="SignUp" enctype="multipart/form-data">
+      <form class="space-y-6" action="/SignUpAuth" method="POST" name="SignUp" enctype="x-www-form-urlencoded">
         <div>
           <label for="userName" class="block text-sm font-medium leading-6 text-gray-900">User Name?</label>
           <div class="mt-2">
@@ -140,7 +140,8 @@
             </div>
         
             <div>
-              <input type="radio" name="PaymentRate" id="Monthly" value="Monthly" class="peer hidden" />
+              <!-- still needs work -->
+              <input type="radio" name="EndPeriodDate" id="Monthly" value="Monthly" class="peer hidden" />
               <label
                 for="Monthly"
                 class="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
