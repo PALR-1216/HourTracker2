@@ -41,22 +41,20 @@ app.use(bodyParser.json())
 
 
 
-  //   let conn = mysql.createConnection({
-  //     host:"localhost",
-  //     user:"root",
-  //     password:"root",
-  //     database:"HourTracker2",
-  //     port:8889
-  // })
-
-  let conn = mysql.createConnection({
-    host:process.env.DB_HOST,
-    password:process.env.DB_PASSWORD,
-    user:process.env.DB_USER,
-    database:process.env.DB_NAME,
-
-
+    let conn = mysql.createConnection({
+      host:"localhost",
+      user:"root",
+      password:"root",
+      database:"HourTracker2",
+      port:8889
   })
+
+  // let conn = mysql.createConnection({
+  //   host:process.env.DB_HOST,
+  //   password:process.env.DB_PASSWORD,
+  //   user:process.env.DB_USER,
+  //   database:process.env.DB_NAME,
+  // })
 
   conn.connect((err) => {
     if (err) {
@@ -70,6 +68,7 @@ app.use(bodyParser.json())
     }
 
   })
+
 
 
 
@@ -233,7 +232,7 @@ app.post('/SignUpAuth', (req,res) =>{
               
               
             })
-            res.redirect('/Login')
+            res.redirect('/AccountCreated')
           })
           
         })
@@ -257,6 +256,12 @@ app.get("/feedBack", (req,res) =>{
 
 app.post('/SendFeedBack', (req,res) =>{
 
+  let sql = `insert into FeedBack (Name, Email, Message) values ('${req.body.Name}', '${req.body.Email}', '${req.body.Message}');`;
+  conn.query(sql, (err,rows) =>{
+    if(err) {throw err}
+    console.log(rows)
+  })
+
 })
 
 app.get("/AboutMe", (req,res) =>{
@@ -266,6 +271,10 @@ app.get("/AboutMe", (req,res) =>{
 // app.get('/RemoveAds', (req,res) =>{
 //   res.render("RemoveAds")
 // })
+
+app.get('/AccountCreated', (req,res) =>{
+  res.render("AccountCreated")
+})
 
 
 
