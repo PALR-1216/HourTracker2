@@ -41,20 +41,20 @@ app.use(bodyParser.json())
 
 
 
-    let conn = mysql.createConnection({
-      host:"localhost",
-      user:"root",
-      password:"root",
-      database:"HourTracker2",
-      port:8889
-  })
-
-  // let conn = mysql.createConnection({
-  //   host:process.env.DB_HOST,
-  //   password:process.env.DB_PASSWORD,
-  //   user:process.env.DB_USER,
-  //   database:process.env.DB_NAME,
+  //   let conn = mysql.createConnection({
+  //     host:"localhost",
+  //     user:"root",
+  //     password:"root",
+  //     database:"HourTracker2",
+  //     port:8889
   // })
+
+  let conn = mysql.createConnection({
+    host:process.env.DB_HOST,
+    password:process.env.DB_PASSWORD,
+    user:process.env.DB_USER,
+    database:process.env.DB_NAME,
+  })
 
   conn.connect((err) => {
     if (err) {
@@ -206,7 +206,7 @@ app.post('/SignUpAuth', (req,res) =>{
 
  
   let CheckUserName = `select * from Users where User_Email = '${req.body.Email}' or User_Name ='${req.body.userName}'`;
-  conn.query(CheckUserName, (err,rows) =>{
+  conn.query(CheckUserName, (error,rows) =>{
     // if(err) {throw err.message}
     if(rows.length > 0) {
       res.send("<script>alert(`UserName or Email already exist`);  javascript:history.go(-1);</script>");
@@ -221,13 +221,21 @@ app.post('/SignUpAuth', (req,res) =>{
               OvertimeType = 0.5;
             }
 
-            else if(req.body.OvertimeType == "Double") {
-              OvertimeType = 2;
+            // else if(req.body.OvertimeType == "Double") {
+            //   OvertimeType = 2;
+            // }
+
+            else{
+              OvertimeType = 2
             }
+
+            
             let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${weekDate}', '${hash}', '${AllDate}');`;
 
-            conn.query(sql, (err,rows) =>{
-              if(err) {throw err.message};
+            conn.query(sql, (errorInAccount,rows) =>{
+              if(errorInAccount) {
+                res.json("An error occured please try again")
+              }
               console.log(rows)        
               
               
