@@ -259,7 +259,10 @@ app.post('/SignUpAuth', (req,res) =>{
 })
 
 app.get("/feedBack", (req,res) =>{
-  res.render("FeedBackPage")
+    res.render("FeedBackPage");
+
+
+  
 })
 
 app.post('/SendFeedBack', (req,res) =>{
@@ -273,7 +276,8 @@ app.post('/SendFeedBack', (req,res) =>{
 })
 
 app.get("/AboutMe", (req,res) =>{
-  res.render("AboutMe")
+    res.render("AboutMe")
+  
 })
 
 // app.get('/RemoveAds', (req,res) =>{
@@ -281,8 +285,14 @@ app.get("/AboutMe", (req,res) =>{
 // })
 
 app.get('/AccountCreated', (req,res) =>{
-  res.render("AccountCreated")
+  res.render("PopUps/AccountCreated")
 })
+
+// app.get('/Account', (req,res) =>{
+//   res.render('PopUps/ThankYouFeedBack')
+// })
+
+
 
 
 
