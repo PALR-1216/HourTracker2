@@ -118,7 +118,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/Login',(req,res) =>{
+
+  if(req.cookies.user_id) {
+    res.render('test1');
+
+  }
+
+  else {
   res.render("Login")
+  }
 })
 
 //show The Landing page
@@ -288,9 +296,9 @@ app.get('/AccountCreated', (req,res) =>{
   res.render("PopUps/AccountCreated")
 })
 
-// app.get('/Account', (req,res) =>{
-//   res.render('PopUps/ThankYouFeedBack')
-// })
+app.get('/Account', (req,res) =>{
+  res.render('PopUps/ThankYouFeedBack')
+})
 
 
 
