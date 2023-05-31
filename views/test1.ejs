@@ -29,22 +29,27 @@
     <!-- if data array is empty show lottie with no footer else show footer and data -->
    
 
-      <div class="container d-flex flex-column align-items-center justify-content-center p-3">
-        <div id="lottieAnimation">
-            <lottie-player src="https://assets2.lottiefiles.com/private_files/lf30_e3pteeho.json" background="transparent"  speed="1"  loop  autoplay></lottie-player>
-
-        </div>
-        <h2 class="text-center mt-4">No Data Available</h2>
-        <a href="#" class="btn btn-primary"><strong><i class="bi bi-database-add"></i> Add Data</a></strong>
-      </div>
+      
 
 
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <title>Test1</title>
 </head>
 <body>
     <meta name="viewport" content="width=device-width, user-scalable=no">
- 
+
+    
+<%- include("AddData")-%>
+
+
+    <!-- <div class="container d-flex flex-column align-items-center justify-content-center p-3">
+      <div id="lottieAnimation">
+          <lottie-player src="https://assets2.lottiefiles.com/private_files/lf30_e3pteeho.json" background="transparent"  speed="1"  loop  autoplay></lottie-player>
+
+      </div>
+      <h2 class="text-center mt-4">No Data Available</h2>
+      <a href="#" class="btn btn-primary"><strong><i class="bi bi-database-add"></i> Add Data</a></strong>
+    </div>
+  -->
 
     
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> -->
