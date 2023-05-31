@@ -239,16 +239,15 @@ app.post('/SignUpAuth', (req,res) =>{
 
             
             let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePicker}', '${hash}', '${AllDate}', '${req.body.PaymentRate}');`;
-            res.json(sql)
-            // conn.query(sql, (errorInAccount,rows) =>{
-            //   if(errorInAccount) {
-            //     res.json("An error occured please try again")
-            //   }
-            //   console.log(rows)        
+            conn.query(sql, (errorInAccount,rows) =>{
+              if(errorInAccount) {
+                res.json("An error occured please try again")
+              }
+              console.log(rows)        
               
               
-            // })
-            // res.redirect('/AccountCreated')
+            })
+            res.redirect('/AccountCreated')
           })
           
         })
