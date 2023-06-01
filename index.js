@@ -303,23 +303,25 @@ app.get('/Account', (req,res) =>{
 
 
 
-app.post('/calculateHours', (req,res) =>{
-    let checkIn = req.body.checkIn;
-    let clockOut = req.body.clockOut;
+app.post('/calculateHour', (req,res) =>{
+    let checkIn = req.body.startTime;
+    let clockOut = req.body.endTime;
 
-    let obj = {
-      enter: checkIn,
-      out: clockOut,
-      startBreak: '',
-      endBreak: '',
-    };
+    if(checkIn || clockOut > 12) {
+      checkIn - 12;
+      clockOut - 12
 
-    if (req.body.startBreak && req.body.endBreak) {
-      obj.startBreak = req.body.startBreak;
-      obj.endBreak = req.body.endBreak;
+      res.json({
+        startTime:checkIn,
+        endTime:clockOut 
+      })
     }
 
-    res.json(obj);
+    res.json({
+      startTime:checkIn,
+      endTime:clockOut 
+    })
+
 })
 
 
