@@ -306,21 +306,11 @@ app.get('/Account', (req,res) =>{
 app.post('/calculateHour', (req,res) =>{
     let checkIn = req.body.startTime;
     let clockOut = req.body.endTime;
+    //TODO:solve issue, need to find a way to convert the hour into a int to make the calculations to get the amount of hours
 
-    if(checkIn || clockOut > 12) {
-      checkIn - 12;
-      clockOut - 12
 
-      res.json({
-        startTime:checkIn,
-        endTime:clockOut 
-      })
-    }
 
-    res.json({
-      startTime:checkIn,
-      endTime:clockOut 
-    })
+    //if num is greater than 12 then substract 12 else do nothing
 
 })
 
