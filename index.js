@@ -384,8 +384,10 @@ app.get('/api/:Admin', (req,res) =>{
     
 
   }
+})
 
-  
+app.get('/api/:Admin/getusers', (req,res) =>{
+  //get a list of users of my page
 })
 
 
