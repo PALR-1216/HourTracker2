@@ -91,9 +91,31 @@ app.use(session({
 }))
 
 
+function Calculate() {
+  let time1 = "9:50"
+  let time2 = "16:19"
+
+  let array1 =  parseInt(time1.split(":"));
+  let array2 =  parseInt(time2.split(":"))
+  let totalHours = array1[0] - array2[0];
+  if(array1[0] > 12) {
+    array1[0] -= 12
+  }
+
+
+  else if(array2[0] > 12) {
+    array2[0] -= 12
+  }
+  console.log(array1)
+  console.log(array2)
+}
+
+
+
 
 
 app.get('/', (req, res) => {
+  Calculate();
   // res.render('Login');
   if(req.cookies.user_id == null) {
     res.redirect('/LandingPage')
@@ -306,9 +328,16 @@ app.get('/Account', (req,res) =>{
 app.post('/calculateHour', (req,res) =>{
     let checkIn = req.body.startTime;
     let clockOut = req.body.endTime;
+  
+
+    
+
     //TODO:solve issue, need to find a way to convert the hour into a int to make the calculations to get the amount of hours
 
-
+    res.json({
+      start:checkIn,
+      end:clockOut
+    })
 
     //if num is greater than 12 then substract 12 else do nothing
 
