@@ -95,8 +95,11 @@ function Calculate() {
   let time1 = "9:50"
   let time2 = "16:19"
 
-  let array1 =  parseInt(time1.split(":"));
-  let array2 =  parseInt(time2.split(":"))
+  let array1 =  time1.split(":")
+  let array2 =  time2.split(":")
+  
+  console.log(`${array1[0]}:${array1[1]}`)
+  console.log(`${array2[0] - 12}:${array2[1]}`)
   let totalHours = array1[0] - array2[0];
   if(array1[0] > 12) {
     array1[0] -= 12
