@@ -91,34 +91,14 @@ app.use(session({
 }))
 
 
-function Calculate() {
-  let time1 = "9:50"
-  let time2 = "16:19"
 
-  let array1 =  time1.split(":")
-  let array2 =  time2.split(":")
-  
-  console.log(`${array1[0]}:${array1[1]}`)
-  console.log(`${array2[0] - 12}:${array2[1]}`)
-  let totalHours = array1[0] - array2[0];
-  if(array1[0] > 12) {
-    array1[0] -= 12
-  }
-
-
-  else if(array2[0] > 12) {
-    array2[0] -= 12
-  }
-  console.log(array1)
-  console.log(array2)
-}
 
 
 
 
 
 app.get('/', (req, res) => {
-  Calculate();
+  
   // res.render('Login');
   if(req.cookies.user_id == null) {
     res.redirect('/LandingPage')
@@ -325,21 +305,46 @@ app.get('/Account', (req,res) =>{
 })
 
 
+app.get('/addHour', (req,res) =>{
+  if(req.cookies.user_id == null) {
+    res.redirect('/')
+  }
+  else{
+    res.render('AddData')
+  }
+})
+
 
 
 
 app.post('/calculateHour', (req,res) =>{
-    let checkIn = req.body.startTime;
-    let clockOut = req.body.endTime;
-  
-
     
-
+      // const options = { hour12: true, hour: 'numeric' };
+      const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
+    
+      let checkIn = new Date(req.body.startTime);
+      let clockOut = new Date(req.body.endTime);
+      const milliseconds = Math.abs(clockOut - checkIn);
+      const hours = milliseconds / 36e5;
+    
+      //get Date of the input
+      let year = checkIn.getFullYear().toString().slice(-2);
+      let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
+      let date = ('0' + checkIn.getDate()).slice(-2);
+      let AllDate = year + '/' + month + '/' + date;
+    
+      let hour1 = checkIn.toLocaleTimeString('en-US', options);
+      let hour2 = clockOut.toLocaleTimeString('en-US', options);
+      console.log(`Time of input ${AllDate}`);
+      console.log(`Total Hours: ${hours}`);
+      console.log(`Started Shift: ${hour1}`);
+      console.log(`Ended Shift: ${hour2}`);
     //TODO:solve issue, need to find a way to convert the hour into a int to make the calculations to get the amount of hours
 
     res.json({
-      start:checkIn,
-      end:clockOut
+      start:hour1,
+      end:hour2,
+      totalHours:hours
     })
 
     //if num is greater than 12 then substract 12 else do nothing
