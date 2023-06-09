@@ -324,6 +324,22 @@ app.post('/calculateHour', (req,res) =>{
     
       let checkIn = new Date(req.body.startTime);
       let clockOut = new Date(req.body.endTime);
+      let startOfBreak = new Date(req.body.startBreak);
+      let endOfBreak = new Date(req.body.endBreak);
+
+      if(startOfBreak!= null || endOfBreak != null) {
+        const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
+        let totalBreakTime = breakMiliseconds / 36e5;
+        console.log(`total break ${totalBreakTime}`)
+
+      }
+
+      // else if(startOfBreak == null || endOfBreak == null) {
+      //   res.send("<script>alert('Please coomplete break time'</script>")
+      // }
+
+      
+
       const milliseconds = Math.abs(clockOut - checkIn);
       const hours = milliseconds / 36e5;
     
@@ -335,16 +351,13 @@ app.post('/calculateHour', (req,res) =>{
     
       let hour1 = checkIn.toLocaleTimeString('en-US', options);
       let hour2 = clockOut.toLocaleTimeString('en-US', options);
-      console.log(`Time of input ${AllDate}`);
-      console.log(`Total Hours: ${hours}`);
-      console.log(`Started Shift: ${hour1}`);
-      console.log(`Ended Shift: ${hour2}`);
-    //TODO:solve issue, need to find a way to convert the hour into a int to make the calculations to get the amount of hours
+      
 
-    res.json({
+   
+      res.json({
       start:hour1,
       end:hour2,
-      totalHours:hours
+      totalHours:hours,
     })
 
     //if num is greater than 12 then substract 12 else do nothing
