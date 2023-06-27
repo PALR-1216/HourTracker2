@@ -69,9 +69,6 @@ app.use(bodyParser.json())
 
   })
 
-
-
-
 // const Uploader = multer({storage:multer.memoryStorage()});
 
 //make a login System in node with sessions and mysql 
@@ -431,7 +428,8 @@ app.get('/api/:Admin', (req,res) =>{
   else{
     res.redirect('/')
 
-    
+   
+	
 
   }
 })
@@ -446,6 +444,8 @@ app.get('*', (req, res) => {
 });
 
 
+
+
 //function so the server doesent go to sleep
 setInterval(function () {
   conn.query('SELECT 1');
@@ -458,4 +458,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log('server running in port 3000');
 });
+
+
+
 
