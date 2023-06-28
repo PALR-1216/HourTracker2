@@ -321,8 +321,9 @@ app.post('/calculateHour', (req,res) =>{
     
       let checkIn = new Date(req.body.startTime);
       let clockOut = new Date(req.body.endTime);
-      let startOfBreak = new Date(req.body.startBreak);
-      let endOfBreak = new Date(req.body.endBreak);
+      let startOfBreak = new Date(req.body.startBreak) || null
+      let endOfBreak = new Date(req.body.endBreak) || null
+      
 
       if(startOfBreak!= null || endOfBreak != null) {
         const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
@@ -331,9 +332,7 @@ app.post('/calculateHour', (req,res) =>{
 
       }
 
-      // else if(startOfBreak == null || endOfBreak == null) {
-      //   res.send("<script>alert('Please coomplete break time'</script>")
-      // }
+    
 
       
 
