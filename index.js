@@ -323,7 +323,7 @@ app.post('/calculateHour', (req, res) => {
   let clockOut = new Date(req.body.endTime);
   let startOfBreak = new Date(req.body.startBreak)
   let endOfBreak = new Date(req.body.endBreak)
-
+  //call function for timepunch
 
   if (startOfBreak != null && endOfBreak != null) {
 
@@ -348,7 +348,7 @@ app.post('/calculateHour', (req, res) => {
       break:totalBreakTime || "No Break"
     })
 
-    let sql = `insert into hours `
+    let sql = `insert into Hours`
   }
 
   else{
@@ -372,16 +372,8 @@ app.post('/calculateHour', (req, res) => {
       break:totalBreakTime || "No Break"
     })
   }
-
-
-
-
-
-
-
-  //if num is greater than 12 then substract 12 else do nothing
-
 })
+
 
 
 
@@ -434,6 +426,8 @@ app.post('/DeleteAccount', (req, res) => {
     })
   }
 })
+
+
 
 
 
