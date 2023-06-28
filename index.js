@@ -10,7 +10,7 @@ import Jsontoken from 'jsonwebtoken';
 import cookie from 'cookie-session';
 import { nanoid } from 'nanoid'
 import * as dotenv from 'dotenv';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,39 +35,39 @@ app.set('trust proxy', 1);
 app.set('views', path.join("views"));
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }))
 app.use(bodyParser.json())
 
 
 
-  //   let conn = mysql.createConnection({
-  //     host:"localhost",
-  //     user:"root",
-  //     password:"root",
-  //     database:"HourTracker2",
-  //     port:8889
-  // })
+//   let conn = mysql.createConnection({
+//     host:"localhost",
+//     user:"root",
+//     password:"root",
+//     database:"HourTracker2",
+//     port:8889
+// })
 
-  let conn = mysql.createConnection({
-    host:process.env.DB_HOST,
-    password:process.env.DB_PASSWORD,
-    user:process.env.DB_USER,
-    database:process.env.DB_NAME,
-  })
+let conn = mysql.createConnection({
+  host: process.env.DB_HOST,
+  password: process.env.DB_PASSWORD,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+})
 
-  conn.connect((err) => {
-    if (err) {
-        console.log(err.message)
-    }
-    else{
+conn.connect((err) => {
+  if (err) {
+    console.log(err.message)
+  }
+  else {
 
-      
+
     console.log("database connected");
 
-    }
+  }
 
-  })
+})
 
 // const Uploader = multer({storage:multer.memoryStorage()});
 
@@ -76,14 +76,14 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(session({
-    cookie: {
-        secure: true,
-        maxAge: 21600000
+  cookie: {
+    secure: true,
+    maxAge: 21600000
 
-    },
-    secret: 'user_sid',
-    resave: true,
-    saveUninitialized: true,
+  },
+  secret: 'user_sid',
+  resave: true,
+  saveUninitialized: true,
 
 }))
 
@@ -95,45 +95,45 @@ app.use(session({
 
 
 app.get('/', (req, res) => {
-  
+
   // res.render('Login');
-  if(req.cookies.user_id == null) {
+  if (req.cookies.user_id == null) {
     res.redirect('/LandingPage')
   }
 
-  
-  else if(req.cookies.user_id) {
+
+  else if (req.cookies.user_id) {
     // res.json(req.cookies.user_id)
     try {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
 
-        res.render('test1')
-      
+      res.render('test1')
+
     } catch (error) {
       console.log("error")
     }
   }
 
-  else{
+  else {
     res.render('Login')
   }
 });
 
-app.get('/Login',(req,res) =>{
+app.get('/Login', (req, res) => {
 
-  if(req.cookies.user_id) {
+  if (req.cookies.user_id) {
     res.render('test1');
 
   }
 
   else {
-  res.render("Login")
+    res.render("Login")
   }
 })
 
 //show The Landing page
 
-app.get('/LandingPage', (req,res) =>{
+app.get('/LandingPage', (req, res) => {
   res.render("LandingPage")
   // res.render('LandingPageTest3')
   // res.render('LandingPage2')
@@ -142,28 +142,28 @@ app.get('/LandingPage', (req,res) =>{
 
 
 
-app.post('/LoginAuth', (req,res) =>{
+app.post('/LoginAuth', (req, res) => {
   let name = req.body.userName;
   let pass = req.body.password;
-  
-  let checkUser = `select User_id, Users_Password from Users where User_Name ='${name}'`;
-  conn.query(checkUser, (err,rows) =>{
-    if(err) throw err;
 
-    if(rows.length > 0){
+  let checkUser = `select User_id, Users_Password from Users where User_Name ='${name}'`;
+  conn.query(checkUser, (err, rows) => {
+    if (err) throw err;
+
+    if (rows.length > 0) {
       let hash = rows[0].Users_Password;
-      bcryptjs.compare(pass, hash, (err,result) =>{
-        if(result) {
+      bcryptjs.compare(pass, hash, (err, result) => {
+        if (result) {
           res.cookie("user_id", rows[0].User_id);
           res.redirect('/')
 
         }
-        else{
+        else {
           res.send("<script>alert(`UserName or password are incorrect`); window.location=`/Login`;</script>")
         }
       })
     }
-    else{
+    else {
       res.send("<script>alert(`UserName or password are incorrect`); window.location=`/Login`;</script>")
     }
   })
@@ -181,12 +181,12 @@ app.post('/LoginAuth', (req,res) =>{
 
 
 
-app.get('/signUp', (req,res) =>{
+app.get('/signUp', (req, res) => {
   res.render('SignUp')
 })
 
 
-app.post('/SignUpAuth', (req,res) =>{
+app.post('/SignUpAuth', (req, res) => {
 
   let dateObj = new Date();
   let year = dateObj.getFullYear().toString().slice(-2)
@@ -194,7 +194,7 @@ app.post('/SignUpAuth', (req,res) =>{
   let date = ("0" + dateObj.getDate()).slice(-2);
   let AllDate = year + "/" + month + "/" + date
 
-  
+
 
   // let userObject = {
   //   userID:nanoid(),
@@ -211,102 +211,102 @@ app.post('/SignUpAuth', (req,res) =>{
   // }
 
 
- 
 
 
- 
+
+
   let CheckUserName = `select * from Users where User_Email = '${req.body.Email}' or User_Name ='${req.body.userName}'`;
-  conn.query(CheckUserName, (error,rows) =>{
+  conn.query(CheckUserName, (error, rows) => {
     // if(err) {throw err.message}
-    if(rows.length > 0) {
+    if (rows.length > 0) {
       res.send("<script>alert(`UserName or Email already exist`);  javascript:history.go(-1);</script>");
     }
-    else{
-        bcryptjs.genSalt(5, (err,salt) =>{
-          bcryptjs.hash(req.body.Password, salt, (err,hash) =>{
-            // if(err) {throw err.message}
-            let weekDate = req.body.EndPeriodDate;
-            let OvertimeType;
-            if(req.body.OvertimeType == "Half") {
-              OvertimeType = 0.5;
+    else {
+      bcryptjs.genSalt(5, (err, salt) => {
+        bcryptjs.hash(req.body.Password, salt, (err, hash) => {
+          // if(err) {throw err.message}
+          let weekDate = req.body.EndPeriodDate;
+          let OvertimeType;
+          if (req.body.OvertimeType == "Half") {
+            OvertimeType = 0.5;
+          }
+
+          // else if(req.body.OvertimeType == "Double") {
+          //   OvertimeType = 2;
+          // }
+
+          else {
+            OvertimeType = 2
+          }
+
+
+          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePicker}', '${hash}', '${AllDate}', '${req.body.PaymentRate}');`;
+          conn.query(sql, (errorInAccount, rows) => {
+            if (errorInAccount) {
+              res.json("An error occured please try again")
             }
+            console.log(rows)
 
-            // else if(req.body.OvertimeType == "Double") {
-            //   OvertimeType = 2;
-            // }
 
-            else{
-              OvertimeType = 2
-            }
-
-            
-            let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePicker}', '${hash}', '${AllDate}', '${req.body.PaymentRate}');`;
-            conn.query(sql, (errorInAccount,rows) =>{
-              if(errorInAccount) {
-                res.json("An error occured please try again")
-              }
-              console.log(rows)        
-              
-              
-            })
-            res.redirect('/AccountCreated')
           })
-          
+          res.redirect('/AccountCreated')
         })
 
-      }
+      })
+
+    }
 
   })
 
 
- 
 
-  
+
+
 
   // conn.query(sql)
 
 })
 
-app.get("/feedBack", (req,res) =>{
-    res.render("FeedBackPage");
+app.get("/feedBack", (req, res) => {
+  res.render("FeedBackPage");
 
 
-  
+
 })
 
-app.post('/SendFeedBack', (req,res) =>{
+app.post('/SendFeedBack', (req, res) => {
 
   let sql = `insert into FeedBack (Name, Email, Message) values ('${req.body.Name}', '${req.body.Email}', '${req.body.Message}');`;
-  conn.query(sql, (err,rows) =>{
-    if(err) {throw err}
+  conn.query(sql, (err, rows) => {
+    if (err) { throw err }
     console.log(rows)
   })
 
 })
 
-app.get("/AboutMe", (req,res) =>{
-    res.render("AboutMe")
-  
+app.get("/AboutMe", (req, res) => {
+  res.render("AboutMe")
+
 })
 
 // app.get('/RemoveAds', (req,res) =>{
 //   res.render("RemoveAds")
 // })
 
-app.get('/AccountCreated', (req,res) =>{
+app.get('/AccountCreated', (req, res) => {
   res.render("PopUps/AccountCreated")
 })
 
-app.get('/Account', (req,res) =>{
+app.get('/Account', (req, res) => {
   res.render('PopUps/ThankYouFeedBack')
 })
 
 
-app.get('/addHour', (req,res) =>{
-  if(req.cookies.user_id == null) {
+app.get('/addHour', (req, res) => {
+  if (req.cookies.user_id == null) {
     res.redirect('/')
   }
-  else{
+  else {
     res.render('AddData')
   }
 })
@@ -314,49 +314,72 @@ app.get('/addHour', (req,res) =>{
 
 
 
-app.post('/calculateHour', (req,res) =>{
-    
-      // const options = { hour12: true, hour: 'numeric' };
-      const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
-    
-      let checkIn = new Date(req.body.startTime);
-      let clockOut = new Date(req.body.endTime);
-      let startOfBreak = new Date(req.body.startBreak) || null
-      let endOfBreak = new Date(req.body.endBreak) || null
-      
+app.post('/calculateHour', (req, res) => {
 
-      if(startOfBreak!= null || endOfBreak != null) {
-        const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
-        let totalBreakTime = breakMiliseconds / 36e5;
-        console.log(`total break ${totalBreakTime}`)
+  // const options = { hour12: true, hour: 'numeric' };
+  const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
 
-      }
+  let checkIn = new Date(req.body.startTime);
+  let clockOut = new Date(req.body.endTime);
+  let startOfBreak = new Date(req.body.startBreak)
+  let endOfBreak = new Date(req.body.endBreak)
 
-    
 
-      
+  if (startOfBreak != null && endOfBreak != null) {
 
-      const milliseconds = Math.abs(clockOut - checkIn);
-      const hours = milliseconds / 36e5;
-    
-      //get Date of the input
-      let year = checkIn.getFullYear().toString().slice(-2);
-      let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
-      let date = ('0' + checkIn.getDate()).slice(-2);
-      let AllDate = year + '/' + month + '/' + date;
-    
-      let hour1 = checkIn.toLocaleTimeString('en-US', options);
-      let hour2 = clockOut.toLocaleTimeString('en-US', options);
-      
+    const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
+    let totalBreakTime = breakMiliseconds / 36e5;
+    const milliseconds = Math.abs(clockOut - checkIn);
+    const hours = milliseconds / 36e5;
 
-   
-      res.json({
-      start:hour1,
-      end:hour2,
-      totalHours:hours,
+    //get Date of the input
+    let year = checkIn.getFullYear().toString().slice(-2);
+    let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
+    let date = ('0' + checkIn.getDate()).slice(-2);
+    let AllDate = year + '/' + month + '/' + date;
+
+    let hour1 = checkIn.toLocaleTimeString('en-US', options);
+    let hour2 = clockOut.toLocaleTimeString('en-US', options);
+
+    res.json({
+      start: hour1,
+      end: hour2,
+      totalHours: hours,
+      break:totalBreakTime || "No Break"
     })
 
-    //if num is greater than 12 then substract 12 else do nothing
+    let sql = `insert into hours `
+  }
+
+  else{
+
+  const milliseconds = Math.abs(clockOut - checkIn);
+  const hours = milliseconds / 36e5;
+
+  //get Date of the input
+  let year = checkIn.getFullYear().toString().slice(-2);
+  let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
+  let date = ('0' + checkIn.getDate()).slice(-2);
+  let AllDate = year + '/' + month + '/' + date;
+
+  let hour1 = checkIn.toLocaleTimeString('en-US', options);
+  let hour2 = clockOut.toLocaleTimeString('en-US', options);
+
+    res.json({
+      start: hour1,
+      end: hour2,
+      totalHours: hours,
+      break:totalBreakTime || "No Break"
+    })
+  }
+
+
+
+
+
+
+
+  //if num is greater than 12 then substract 12 else do nothing
 
 })
 
@@ -368,20 +391,20 @@ app.get('/logout', (req, res, next) => {
 
   let cookie = req.cookies;
   for (var prop in cookie) {
-      if (!cookie.hasOwnProperty(prop)) {
-          continue;
-      }
-      res.cookie(prop, '', {
-          expires: new Date(0)
-      });
+    if (!cookie.hasOwnProperty(prop)) {
+      continue;
+    }
+    res.cookie(prop, '', {
+      expires: new Date(0)
+    });
   }
   res.redirect('/');
 })
 
 
-app.get('/DeleteAccount', (req,res) =>{
+app.get('/DeleteAccount', (req, res) => {
 
-  if(req.cookies.user_id != null) {
+  if (req.cookies.user_id != null) {
     res.render("DeleteAccount")
   }
 
@@ -390,22 +413,22 @@ app.get('/DeleteAccount', (req,res) =>{
   }
 })
 
-app.post('/DeleteAccount',(req,res) =>{
-  if(req.body.password != null) {
+app.post('/DeleteAccount', (req, res) => {
+  if (req.body.password != null) {
 
     let sql = `delete from Users where User_id = "${req.cookies.user_id}";`
-    
-    conn.query(sql,(err,rows) =>{
-      if(err) throw err;
+
+    conn.query(sql, (err, rows) => {
+      if (err) throw err;
 
       let cookie = req.cookies;
       for (var prop in cookie) {
-          if (!cookie.hasOwnProperty(prop)) {
-              continue;
-          }
-          res.cookie(prop, '', {
-              expires: new Date(0)
-          });
+        if (!cookie.hasOwnProperty(prop)) {
+          continue;
+        }
+        res.cookie(prop, '', {
+          expires: new Date(0)
+        });
       }
       res.redirect('/');
     })
@@ -416,24 +439,24 @@ app.post('/DeleteAccount',(req,res) =>{
 
 // -------ADMIN---------
 
-app.get('/api/:Admin', (req,res) =>{
-  if(req.params.Admin === "Senpai") {
-      conn.query('select * from Users', (err,rows) =>{
-        if(err) throw err;
-    
-        res.json(rows)
-      })
+app.get('/api/:Admin', (req, res) => {
+  if (req.params.Admin === "Senpai") {
+    conn.query('select * from Users', (err, rows) => {
+      if (err) throw err;
+
+      res.json(rows)
+    })
   }
-  else{
+  else {
     res.redirect('/')
 
-   
-	
+
+
 
   }
 })
 
-app.get('/api/:Admin/getusers', (req,res) =>{
+app.get('/api/:Admin/getusers', (req, res) => {
   //get a list of users of my page
 })
 
