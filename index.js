@@ -318,7 +318,7 @@ app.post('/calculateHour', (req, res) => {
   let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
   conn.query(user, (err, rows) => {
     if (err) { throw err }
-    let wage = rows[0]
+    let wage = rows[0].User_wage
 
     // const options = { hour12: true, hour: 'numeric' };
     const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
@@ -355,12 +355,13 @@ app.post('/calculateHour', (req, res) => {
       // })
 
       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, '${AllDate}')`
-        res.send(sql)
+        let totalMoney = hours * wage;
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
+        conn.commit(sql);
 
       } else {
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, '${AllDate}')`
-        res.send(sql)
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
+        conn.commit(sql)
 
       }
     }
