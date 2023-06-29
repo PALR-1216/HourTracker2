@@ -315,15 +315,21 @@ app.get('/addHour', (req, res) => {
 
 
 app.post('/calculateHour', (req, res) => {
-  let user = `select User`
+  let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
+  conn.query(user, (err,rows) =>{
+    if(err) {throw err}
+
+    console.log(rows)
+  })
+  
 
   // const options = { hour12: true, hour: 'numeric' };
   const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
 
   let checkIn = new Date(req.body.startTime);
   let clockOut = new Date(req.body.endTime);
-  let startOfBreak = new Date(req.body.startBreak)
-  let endOfBreak = new Date(req.body.endBreak)
+  let startOfBreak = new Date(req.body.startBreak) || null;
+  let endOfBreak = new Date(req.body.endBreak) || null
   //call function for timepunch
 
   if (startOfBreak != null && endOfBreak != null) {
@@ -341,8 +347,8 @@ app.post('/calculateHour', (req, res) => {
 
     let hour1 = checkIn.toLocaleTimeString('en-US', options);
     let hour2 = clockOut.toLocaleTimeString('en-US', options);
-    let break1 = startOfBreak.toLocaleTimeString('en-US', options);
-    let break2 = endOfBreak.toLocaleTimeString('en-US', options);
+    let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
+    let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
     console.log(break1)
     console.log(break2)
 
@@ -354,34 +360,19 @@ app.post('/calculateHour', (req, res) => {
     //   break:totalBreakTime || "No Break"
     // })
 
-    let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, '${AllDate}')`
-    res.send(sql)
-  }
-
-  else{
-
-  const milliseconds = Math.abs(clockOut - checkIn);
-  const hours = milliseconds / 36e5;
-
-  //get Date of the input
-  let year = checkIn.getFullYear().toString().slice(-2);
-  let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
-  let date = ('0' + checkIn.getDate()).slice(-2);
-  let AllDate = year + '/' + month + '/' + date;
-
-  let hour1 = checkIn.toLocaleTimeString('en-US', options);
-  let hour2 = clockOut.toLocaleTimeString('en-US', options);
-
-    // res.json({
-    //   start: hour1,
-    //   end: hour2,
-    //   totalHours: hours,
-    //   break:totalBreakTime || "No Break"
-    // })
-    let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, "No Break", "No Break", ${null}, '${AllDate}' )`
+    if(break1 === "Invalid Date"|| break2 === "Invalid Date") {
+    let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, '${AllDate}')`
     res.send(sql)
 
+    } else{
+      let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, '${AllDate}')`
+      res.send(sql)
+
+    }
+    
   }
+
+  
 })
 
 
