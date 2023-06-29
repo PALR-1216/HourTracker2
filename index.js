@@ -318,8 +318,7 @@ app.post('/calculateHour', (req, res) => {
   let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
   conn.query(user, (err, rows) => {
     if (err) { throw err }
-
-    console.log(rows)
+    let wage = rows[0]
 
     // const options = { hour12: true, hour: 'numeric' };
     const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
