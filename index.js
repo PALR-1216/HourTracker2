@@ -106,8 +106,14 @@ app.get('/', (req, res) => {
     // res.json(req.cookies.user_id)
     try {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
+      let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
+      conn.query(Hours, (err,rows) =>{
+        if(err) throw err;
+        res.render("Home", {Hours:rows})
 
-      res.render('test1')
+      })
+
+      // res.render('Home')
 
     } catch (error) {
       console.log("error")
@@ -122,7 +128,7 @@ app.get('/', (req, res) => {
 app.get('/Login', (req, res) => {
 
   if (req.cookies.user_id) {
-    res.render('test1');
+    res.render('Home');
 
   }
 
@@ -445,6 +451,7 @@ app.get('/api/:Admin', (req, res) => {
 
 app.get('/api/:Admin/getusers', (req, res) => {
   //get a list of users of my page
+  
 })
 
 
