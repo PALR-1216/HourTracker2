@@ -341,14 +341,16 @@ app.post('/calculateHour', (req, res) => {
     let hour1 = checkIn.toLocaleTimeString('en-US', options);
     let hour2 = clockOut.toLocaleTimeString('en-US', options);
 
-    res.json({
-      start: hour1,
-      end: hour2,
-      totalHours: hours,
-      break:totalBreakTime || "No Break"
-    })
 
-    let sql = `insert into Hours`
+    // res.json({
+    //   start: hour1,
+    //   end: hour2,
+    //   totalHours: hours,
+    //   break:totalBreakTime || "No Break"
+    // })
+
+    let sql = `insert into Hours ("${nanoid()}", "${req.cookies.user_id}", "${hour1}", "${hour2}", ${hours}, "${startOfBreak}", "${endOfBreak}", ${totalBreakTime}, )`
+    res.json(sql)
   }
 
   else{
@@ -365,12 +367,15 @@ app.post('/calculateHour', (req, res) => {
   let hour1 = checkIn.toLocaleTimeString('en-US', options);
   let hour2 = clockOut.toLocaleTimeString('en-US', options);
 
-    res.json({
-      start: hour1,
-      end: hour2,
-      totalHours: hours,
-      break:totalBreakTime || "No Break"
-    })
+    // res.json({
+    //   start: hour1,
+    //   end: hour2,
+    //   totalHours: hours,
+    //   break:totalBreakTime || "No Break"
+    // })
+    let sql = `insert into Hours ("${nanoid()}", "${req.cookies.user_id}", "${hour1}", "${hour2}", ${hours}, ${null}, ${null}, ${null}, )`
+    res.json(sql)
+
   }
 })
 
