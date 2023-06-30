@@ -500,6 +500,7 @@ app.get('/api/:Admin/getusers', (req, res) => {
 
 //Login via IOS POST
 app.post('/mobileAuth', (req,res) =>{
+  console.log(req.body.UserName);
 
 })
 
