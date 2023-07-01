@@ -360,12 +360,7 @@ app.post('/calculateHour', (req, res) => {
       //   break:totalBreakTime || "No Break"
       // })
 
-      if (break1 === "Invalid Date" || break2 === "Invalid Date") {
-        let totalMoney = hours * wage;
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
-        conn.commit(sql);
-        // res.redirect('/DataSubmited')
-        let Success = `
+      let Success = `
         <html>
         <head>
           <meta charset="UTF-8">
@@ -398,6 +393,16 @@ app.post('/calculateHour', (req, res) => {
 
         </html>
         `
+
+
+
+
+      if (break1 === "Invalid Date" || break2 === "Invalid Date") {
+        let totalMoney = hours * wage;
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
+        conn.commit(sql);
+        // res.redirect('/DataSubmited')
+        
 
         res.send(Success);
 
