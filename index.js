@@ -416,6 +416,12 @@ app.post('/DeleteAccount',(req,res) =>{
   }
 })
 
+let total = 0;
+
+app.post('/CheckDates', (req,res) =>{
+  total = total + 1
+
+})
 
 
 // -------ADMIN---------
