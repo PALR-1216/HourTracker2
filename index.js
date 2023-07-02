@@ -504,10 +504,103 @@ app.get('/api/:Admin/getusers', (req, res) => {
 
 
 //Login via IOS POST
-app.post('/mobileAuth', (req,res) =>{
-  console.log(req.body.UserName);
+app.post('/Apilogin', (req, res) => {
+  let userName = req.body.userName
+  let password = req.body.password;
 
+
+  if (!userName) {
+      res.json({
+          Message: "Enter username"
+      })
+
+  } else if (!password) {
+      res.json({
+          Message: "Enter password"
+      })
+
+  } else {
+      //check if user exist
+      let sql = `select * from Users where User_Name='${userName}'`
+      conn.query(sql, async (err, rows) => {
+          if (rows.length == 0) {
+              res.json({
+                  Message: "Error in finding users",
+                  Success: "False"
+              })
+          }
+
+          if (err) {
+              res.json({
+                  Message: "Error in finding users",
+                  Success: "False"
+              })
+          } else {
+
+              try {
+
+                  //hashCompare the password to the one in the database
+                  const passwordIsFound = await bcrypt.compare(password, rows[0].Users_Password)
+                  if (!passwordIsFound) {
+                      //user is not found 
+                      res.json({
+                          Message: "Password does not match the database",
+                          Success: "False"
+                      })
+                      return
+                  } else {
+                      let obj;
+                      let token;
+                      var totalHours;
+                      let totalMoney;
+                      var totalNET;
+                      let wage = rows[0].usersWage;
+                      let deduction = rows[0].usersDeduction
+                      let id = rows[0].userId;
+
+
+                      // let sql = `select * from hours where userId = ${rows[0].userId}`
+                      // let sqlTotalHours = `select Format(SUM(totalHour),2) as SumHours from hours where userId=${id};`;
+                      // conn.query(sqlTotalHours, (err, totalHours) => {
+                      //     totalHours = totalHours[0].SumHours;
+                      //     let totalEarned = totalHours * wage
+                      //     totalNET = totalEarned - (totalEarned * deduction)
+
+
+                          // for (let i in rows) {
+                          //     obj = {
+                          //         Success: "True",
+                          //         TotalHours: totalHours,
+                          //         TotalEarned: totalNET,
+                          //         Token: Jsontoken.sign({
+                          //             userId: rows[0].userId,
+                          //             userName: rows[0].userName
+                          //         }, "userData"),
+                          //         userId: rows[0].userId,
+                          //         userName: rows[0].userName,
+                          //         usersWage: rows[0].usersWage,
+                          //         usersDeduction: rows[0].usersDeduction,
+                          //         userEmail: rows[0].userEmail,
+                          //         usersOvertime: rows[0].usersOvertime,
+                          //         DateAdded: rows[0].DateAdded,
+                          //         userPassword: rows[0].userPassword
+                          //     }
+                          // }
+                          // res.json(obj)
+                          // console.log(obj)
+
+                      // })
+                  }
+
+              } catch (error) {
+                  console.log(error)
+
+              }
+          }
+      })
+  }
 })
+
 
 
 app.get('*', (req, res) => {
