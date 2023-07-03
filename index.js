@@ -94,8 +94,10 @@ app.use(session({
 
 
 
+cron.schedule("*/15 * * * * *", () =>{
+  
 
-
+})
 
 app.get('/', (req, res) => {
 
@@ -268,8 +270,14 @@ app.post('/SignUpAuth', (req, res) => {
   })
 
 
+let arr = []
 
 
+  app.get("/CheckDates", (req,res) =>{
+    arr.push(req.user_id);
+    
+
+  })
 
 
   // conn.query(sql)
