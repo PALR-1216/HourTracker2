@@ -275,6 +275,7 @@ let arr = []
 
   app.get("/CheckDates", (req,res) =>{
     arr.push(req.user_id);
+    res.json(arr)
     
 
   })
