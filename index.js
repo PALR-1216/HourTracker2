@@ -251,7 +251,7 @@ app.post('/SignUpAuth', (req, res) => {
           }
 
 
-          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePicker}', '${hash}', '${AllDate}', '${req.body.PaymentRate}');`;
+          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePickerEnd}', '${hash}', '${AllDate}', '${req.body.PaymentRate}', '${req.body.payOut}');`;
           conn.query(sql, (errorInAccount, rows) => {
             if (errorInAccount) {
               res.json("An error occured please try again")
@@ -273,6 +273,7 @@ app.post('/SignUpAuth', (req, res) => {
 
 
   app.get("/CheckDates", (req,res) =>{
+
 
   })
 
