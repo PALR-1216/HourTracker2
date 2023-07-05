@@ -116,7 +116,7 @@ cron.schedule("*/15 * * * * *", () =>{
         let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
         conn.query(sql,(err,rows) =>{
           if(err) throw err
-          
+
         })
       }
 
@@ -286,7 +286,7 @@ app.post('/SignUpAuth', (req, res) => {
           }
 
 
-          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePickerEnd}', '${hash}', '${AllDate}', '${req.body.PaymentRate}', '${req.body.payOut}');`;
+          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePickerEnd}', '${hash}', '${AllDate}', '${req.body.PaymentRate}', '${req.body.payOut}'});`;
           conn.query(sql, (errorInAccount, rows) => {
             if (errorInAccount) {
               res.json("An error occured please try again")
