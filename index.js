@@ -95,6 +95,12 @@ app.use(session({
 
 
 cron.schedule("*/15 * * * * *", () =>{
+
+  let sql = `insert into Test values ('Hello world')`
+  conn.query(sql,(err,rows) =>{
+    if(err) throw err
+    console.log("data added")
+  })
   
 
 })
