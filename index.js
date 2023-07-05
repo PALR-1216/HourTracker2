@@ -96,7 +96,7 @@ app.use(session({
 
 //TODO: Fix this area 
 cron.schedule("*/15 * * * * *", () =>{
-  let sql = "select User_id, User_EndPeriodDate, User_PayOut from Users;"
+  let sql = "select User_id, User_EndPeriodDate, User_PayOut, Payment from Users;"
   let currentDate = moment();
   conn.query(sql,(err,rows) =>{
     for(let i in rows) {
@@ -107,12 +107,14 @@ cron.schedule("*/15 * * * * *", () =>{
 
       if(days_left === 0) {
         console.log(`today is the pay out ${days_left} for user - ${ID}`)
+       
         getUserTotalPay(ID)
 
       }
 
       if (days_left > 0) {
         console.log(`days left ${days_left} for user - ${ID}`)
+        console.log(payOutDates)
         let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
         conn.query(sql,(err,rows) =>{
           if(err) throw err
