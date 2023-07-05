@@ -13,6 +13,7 @@ import * as dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron'
 import nodemailer from 'nodemailer'
+import moment from 'moment';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -93,8 +94,19 @@ app.use(session({
 
 
 
-
+//TODO: Fix this area 
 cron.schedule("*/15 * * * * *", () =>{
+  let sql = "select User_id, User_EndPeriodDate, User_PayOut from Users;"
+  let currentDate = moment()
+  conn.query(sql,(err,rows) =>{
+    for(let i in rows) {
+      let periodDate = moment(rows[i].User_EndPeriodDate);
+      let payOutDates = moment(rows[i].User_PayOut);
+      console.log(periodDate)
+
+    }
+  })
+
 
  
   
