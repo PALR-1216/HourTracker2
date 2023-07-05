@@ -97,21 +97,42 @@ app.use(session({
 //TODO: Fix this area 
 cron.schedule("*/15 * * * * *", () =>{
   let sql = "select User_id, User_EndPeriodDate, User_PayOut from Users;"
-  let currentDate = moment()
+  let currentDate = moment();
   conn.query(sql,(err,rows) =>{
     for(let i in rows) {
       let periodDate = moment(rows[i].User_EndPeriodDate);
       let payOutDates = moment(rows[i].User_PayOut);
-      console.log(periodDate)
+      let days_left = Math.ceil(payOutDates.diff(currentDate, "days", true))
+      let ID = rows[i].User_id;
+
+      if(days_left === 0) {
+        console.log(`today is the pay out ${days_left} for user - ${ID}`)
+        getUserTotalPay(ID)
+
+      }
+
+      if (days_left > 0) {
+        console.log(`days left ${days_left} for user - ${ID}`)
+        let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
+        conn.query(sql,(err,rows) =>{
+          if(err) throw err
+          
+        })
+      }
 
     }
   })
-
-
- 
-  
-
 })
+
+
+function getUserTotalPay(ID) {
+  let sql = `select * from Hours where UserID = '${ID}'`;
+  conn.query(sql, (err,rows) =>{
+    if(err) throw err;
+
+    console.log(rows)
+  })
+}
 
 app.get('/', (req, res) => {
 
