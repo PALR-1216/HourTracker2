@@ -95,62 +95,74 @@ app.use(session({
 
 
 //TODO: Fix this area 
-cron.schedule("*/15 * * * * *", () =>{
-  let sql = "select User_id, User_EndPeriodDate, User_PayOut, Payment from Users;"
-  let currentDate = moment();
-  conn.query(sql,(err,rows) =>{
-    for(let i in rows) {
-      let periodDate = moment(rows[i].User_EndPeriodDate);
-      let payOutDates = moment(rows[i].User_PayOut);
-      let payment = rows[i].Payment;
-      console.log(payment)
-      let days_left = Math.ceil(payOutDates.diff(currentDate, "days", true))
-      let ID = rows[i].User_id;
+// cron.schedule("*/15 * * * * *", () =>{
+//   let sql = "select User_id, User_EndPeriodDate, User_PayOut, Payment from Users;"
+//   let currentDate = moment();
+//   conn.query(sql,(err,rows) =>{
+//     for(let i in rows) {
+//       let periodDate = moment(rows[i].User_EndPeriodDate);
+//       let payOutDates = moment(rows[i].User_PayOut);
+//       let payment = rows[i].Payment;
+//       console.log(payment)
+//       let days_left = Math.ceil(payOutDates.diff(currentDate, "days", true))
+//       let ID = rows[i].User_id;
 
-      if(days_left === 0) {
-        console.log(`today is the pay out ${days_left} for user - ${ID}`)
-        if(payment === "Biweekly") {
-          let nextPayOut = moment(currentDate.add(14, "days", true))
+//       if(days_left === 0) {
+//         console.log(`today is the pay out ${days_left} for user - ${ID}`)
+//         if(payment === "Biweekly") {
+//           let nextPayOut = moment(currentDate.add(14, "days", true))
 
-          let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
-        }
+//           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
+//         }
 
-        else if(payment === "Weekly") {
-          let nextPayOut = moment(currentDate.add(7, "days", true))
+//         else if(payment === "Weekly") {
+//           let nextPayOut = moment(currentDate.add(7, "days", true))
+//           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
 
-        }
+//         }
 
-        else if(payment === "Monthly") { 
-          let nextPayOut = moment(currentDate.add(30, "days", true))
+//         else if(payment === "Monthly") { 
+//           let nextPayOut = moment(currentDate.add(30, "days", true))
+//           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
 
-        }
+//         }
        
-        getUserTotalPay(ID)
+//         getUserTotalPay(ID)
 
-      }
+//       }
 
-      if (days_left > 0) {
-        console.log(`days left ${days_left} for user - ${ID}`)
-        console.log(payOutDates)
-        let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
-        conn.query(sql,(err,rows) =>{
-          if(err) throw err
+//       if (days_left > 0) {
+//         console.log(`days left ${days_left} for user - ${ID}`)
+//         console.log(payOutDates)
+//         let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
+//         conn.query(sql,(err,rows) =>{
+//           if(err) throw err
 
-        })
-      }
+//         })
+//       }
 
-    }
-  })
-})
+//     }
+//   })
+// })
 
 
 function getUserTotalPay(ID) {
   let sql = `select * from Hours where UserID = '${ID}'`;
+  let obj = {};
   conn.query(sql, (err,rows) =>{
     if(err) throw err;
 
-    console.log(rows)
+    for(let i in rows) {
+       obj = {
+        UserID:rows[i].UserID,
+        TotalHours:rows[i].TotalHours,
+        TotalBreak:rows[i].TotalBreak,
+        TotalEarned:rows[i].TotalEarned
+      }
+    }
   })
+
+  console.log(obj)
 }
 
 app.get('/', (req, res) => {
@@ -180,7 +192,7 @@ app.get('/', (req, res) => {
   }
 
   else {
-    res.render('Login')
+    res.redirect('/Login')
   }
 });
 
@@ -261,21 +273,7 @@ app.post('/SignUpAuth', (req, res) => {
 
 
 
-  // let userObject = {
-  //   userID:nanoid(),
-  //   dateAdded:AllDate,
-  //   userName:req.body.userName,
-  //   Email:req.body.Email,
-  //   usersWage:Number(req.body.Wage),
-  //   usersDeduction:Number(req.body.Deduction) / 100,
-  //   usersPassword:req.body.Password,
-  //   OvertimeType:null,
-  //   userDateOfCheck: req.body.DateOfCheck,
-  //   userPaymentRate: null,
-
-  // }
-
-
+  
 
 
 
@@ -290,7 +288,7 @@ app.post('/SignUpAuth', (req, res) => {
       bcryptjs.genSalt(5, (err, salt) => {
         bcryptjs.hash(req.body.Password, salt, (err, hash) => {
           // if(err) {throw err.message}
-          let weekDate = req.body.EndPeriodDate;
+          // let weekDate = req.body.EndPeriodDate;
           let OvertimeType;
           if (req.body.OvertimeType == "Half") {
             OvertimeType = 0.5;
@@ -305,35 +303,29 @@ app.post('/SignUpAuth', (req, res) => {
           }
 
 
-          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePickerEnd}', '${hash}', '${AllDate}', '${req.body.PaymentRate}', '${req.body.payOut}'});`;
-          conn.query(sql, (errorInAccount, rows) => {
-            if (errorInAccount) {
-              res.json("An error occured please try again")
-            }
-            console.log(rows)
+          let sql = `insert into Users Values ('${nanoid()}','${req.body.userName}', '${req.body.Email}', ${Number(req.body.Wage)}, ${Number(req.body.Deduction) / 100}, ${OvertimeType}, '${req.body.DatePickerEnd}', '${hash}', '${AllDate}', '${req.body.PaymentRate}', '${req.body.payOut}' , ${null});`;
+          // res.json(sql)
+          conn.commit(sql)
+          // conn.query(sql, (errorInAccount, rows) => {
+          //   if (errorInAccount) {
+          // //     // res.json("An error occured please try again")
+          //     console.log("error happened inserting Data")
+          //   }
+          // //   // console.log(rows)
 
 
-          })
-          res.redirect('/AccountCreated')
+          // })
+          res.redirect('/')
         })
 
       })
+      // res.redirect('/')
 
     }
 
   })
 
-
-
-
-  app.get("/CheckDates", (req,res) =>{
-
-
-  })
-
-
-  // conn.query(sql)
-
+  // res.redirect('/')
 })
 
 app.get("/feedBack", (req, res) => {
