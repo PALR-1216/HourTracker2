@@ -14,6 +14,7 @@ import { fileURLToPath } from 'url';
 import cron from 'node-cron'
 import nodemailer from 'nodemailer'
 import moment from 'moment';
+import cookieSession from 'cookie-session';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -91,49 +92,202 @@ app.use(session({
 
 }))
 
+cron.schedule("*/15 * * * * *", () =>{
+  //GET USER END PERIOD DATE
+  let sql = ` select User_id, User_EndPeriodDate,Payment,User_deduction, User_PayOut, User_wage from Users`;
+  conn.query(sql, (err,rows) =>{
+    if(err) {
+      console.log("error in Period Checker Bot")
+      throw err;
+    }
+
+    if(rows.length != 0) {
+      for(let i in rows) {
+        let ID = rows[i].User_id;
+        let EndPeriod = moment(rows[i].User_EndPeriodDate);
+        let Wage = rows[i].User_wage
+        let PaymentPeriod = rows[i].Payment;
+        let PayDate = rows[i].User_PayOut;
+        let deduction = rows[i].User_deduction;
+        let currentDate = moment()
+        let DaysLeft = Math.ceil(currentDate.diff(currentDate, "days", true))
+        console.log(DaysLeft);
+
+        if(DaysLeft === 0) {
+
+          if(PaymentPeriod === "Weekly") {
+            let nextDate = moment(currentDate.add(7, "days", true)).calendar()
+           
+            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+            getTotalEarned(ID, currentDate,  EndPeriod, Wage, deduction, PayDate );
+  
+            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
+            console.log(NextEndPeriod)
+
+  
+          }
+  
+          else if(PaymentPeriod === "Biweekly") {
+            let nextDate = moment(currentDate.add(14, "days", true)).calendar()
+            getTotalEarned(ID, currentDate, EndPeriod, Wage, deduction, PayDate );
+
+           
+            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+  
+            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
+            console.log(NextEndPeriod)
+  
+          }
+  
+          else if(PaymentPeriod === "Monthly") {
+            let nextDate = moment(currentDate.add(30, "days", true)).calendar()
+            console.log(ID)
+            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+  
+            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
+            console.log(NextEndPeriod)
+  
+          }  
+        }
+
+        else if(DaysLeft > 0) {
+
+        }
+      }
+    }
+  })
+
+})
+
+
+function getTotalEarned(ID, EndPeriod, Wage, deduction , PayDate) {
+
+  let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
+  conn.query(makePayOut, (err,rows) =>{
+    let obj = {
+      totalHours: rows[0].Total,
+      totalMoney:rows[0].totalEarned,
+      totalTax:rows[0].TotalTaxes
+    }
+    let insertDB = `insert into PayOuts Values ('${nanoid()}', '${ID}', '${moment(EndPeriod).format("YYYY/MM/DD")}', '${moment(currentDate).format("YYYY/MM/DD")}', ${obj.totalMoney}, ${obj.totalHours}, ${obj.totalTax}, '${moment(PayDate).format("YYYY/MM/DD")}', ${0})`
+    console.log(insertDB)
+
+    console.table(obj)
+  }) 
+
+}
+
+
+// cron.schedule("*/15 * * * * *", () =>{
+//   // User_EndPeriodDate
+//   let sql = `select User_id, User_EndPeriodDate,User_deduction,User_PayOut, Payment from Users;`
+//   let currentDate = moment()
+//   conn.query(sql,(err,rows) =>{
+//     for(let i in rows) {
+//       let periodDate = moment(rows[i].User_EndPeriodDate);
+//       let User_PayOut = moment(rows[i].User_PayOut).format("MMM DD")
+//       let UserDeduction = rows[i].User_deduction;
+//       let days_left = Math.ceil(periodDate.diff(currentDate, "days", true))
+
+
+//       let payment = rows[i].Payment;
+//       let ID = rows[i].User_id;
+//       if(days_left === 0) {
+//         // console.log(`today is your periodPay ${currentDate.format("MMM DD")}`)
+
+//         if(payment === "Biweekly") {
+//           let BiWeek = 14;
+          
+//           getUserPayPeriod(ID, periodDate, UserDeduction, User_PayOut)
+//           let NextPayOut = moment(periodDate.add(BiWeek, "days", true)).format("YYYY-MM-DD")
+//           let NextDaysLeft = moment(NextPayOut.diff(currentDate, 'days', true));
+
+//           // let NextDaysLeft = Math.ceil(moment(periodDate.add(BiWeek, "days", true).format("YYYY-MM-DD")))
+//           let UpdateDate = `update Users set User_PayOut = `
+//           let sql = `update Users set User_EndPeriodDate ='${NextPayOut}' where User_id='${ID}'`
+//           conn.commit(sql);
+//         }
+
+//         else if (payment === "Weekly") {
+//           let week = 7
+//           getUserPayPeriod(ID,periodDate, UserDeduction, User_PayOut)
+//           let NextPayOut = moment(periodDate.add(week, "days", true)).format("YYYY-MM-DD")
+//           let sql = `update Users set User_EndPeriodDate ='${NextPayOut}' where User_id='${ID}'`
+//           conn.commit(sql);
+//         }
+
+//         else if(payment === "Monthly") {
+//           let month = 30;
+//           getUserPayPeriod(ID,periodDate, UserDeduction, User_PayOut)
+//           let NextPayOut = moment(periodDate.add(month, "days", true)).format("YYYY-MM-DD")
+//           let sql = `update Users set User_EndPeriodDate ='${NextPayOut}' where User_id='${ID}'`
+//           conn.commit(sql);
+//         }
+//       }
+//     }
+//   })
+// })
+
 
 
 
 //TODO: Fix this area 
+//cron shedule for payOuts
 // cron.schedule("*/15 * * * * *", () =>{
-//   let sql = "select User_id, User_EndPeriodDate, User_PayOut, Payment from Users;"
+//   let sql = "select User_id, User_PayOut, Payment from Users;"
 //   let currentDate = moment();
 //   conn.query(sql,(err,rows) =>{
 //     for(let i in rows) {
-//       let periodDate = moment(rows[i].User_EndPeriodDate);
+//       // let periodDate = moment(rows[i].User_EndPeriodDate);
 //       let payOutDates = moment(rows[i].User_PayOut);
 //       let payment = rows[i].Payment;
-//       console.log(payment)
+//       // console.log(payment)
 //       let days_left = Math.ceil(payOutDates.diff(currentDate, "days", true))
 //       let ID = rows[i].User_id;
 
 //       if(days_left === 0) {
 //         console.log(`today is the pay out ${days_left} for user - ${ID}`)
 //         if(payment === "Biweekly") {
-//           let nextPayOut = moment(currentDate.add(14, "days", true))
+//           let nextPayOut = moment(currentDate.add(14, "days", true)).format("MM-DD-YY")
+//           console.log(`Next PayOut ${nextPayOut}`)
+//           let isPayDate = 1;
+//           // let showPayOut = `update PayOuts set IsPayOutDate = ${isPayDate} where User_ID = '${ID}'`
 
 //           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
+//           console.log(sql)
+//           // conn.commit(sql)
+//           getUserTotalPay(ID)
 //         }
 
 //         else if(payment === "Weekly") {
-//           let nextPayOut = moment(currentDate.add(7, "days", true))
+//           let nextPayOut = moment(currentDate.add(7, "days", true)).format("MM-DD-YY")
+//           let isPayDate = 1;
+//           // let showPayOut = `update PayOuts set IsPayOutDate = ${isPayDate} where User_ID = '${ID}'`
 //           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
+//           console.log(sql)
+//           // conn.commit(sql)
+//           getUserTotalPay(ID)
 
 //         }
 
 //         else if(payment === "Monthly") { 
-//           let nextPayOut = moment(currentDate.add(30, "days", true))
+//           let nextPayOut = moment(currentDate.add(30, "days", true)).format("MM-DD-YY")
+//           let isPayDate = 1;
+//           // let showPayOut = `update PayOuts set IsPayOutDate = ${isPayDate} where User_ID = '${ID}'`
 //           let sql = `update Users set User_PayOut=${nextPayOut} where User_id = '${ID}'`
+//           console.log(sql)
+//           // conn.commit(sql)
+//           getUserTotalPay(ID)
 
 //         }
        
-//         getUserTotalPay(ID)
+        
 
 //       }
 
 //       if (days_left > 0) {
-//         console.log(`days left ${days_left} for user - ${ID}`)
-//         console.log(payOutDates)
+//         // console.log(`days left ${days_left} for user - ${ID}`)
+//         // console.log(payOutDates)
 //         let sql = `update Users set DaysLeftToPayOut=${days_left} where User_id = '${ID}'`
 //         conn.query(sql,(err,rows) =>{
 //           if(err) throw err
@@ -149,18 +303,22 @@ app.use(session({
 function getUserTotalPay(ID) {
   let sql = `select * from Hours where UserID = '${ID}'`;
   let obj = {};
-  conn.query(sql, (err,rows) =>{
-    if(err) throw err;
+  let isPayDate = 1;
+    let showPayOut = `update PayOuts set IsPayOutDate = ${isPayDate} where User_ID = '${ID}'`
+    // conn.commit(showPayOut)
 
-    for(let i in rows) {
-       obj = {
-        UserID:rows[i].UserID,
-        TotalHours:rows[i].TotalHours,
-        TotalBreak:rows[i].TotalBreak,
-        TotalEarned:rows[i].TotalEarned
-      }
-    }
-  })
+  // conn.query(sql, (err,rows) =>{
+  //   if(err) throw err;
+
+  //   for(let i in rows) {
+  //      obj = {
+  //       UserID:rows[i].UserID,
+  //       TotalHours:rows[i].TotalHours,
+  //       TotalBreak:rows[i].TotalBreak,
+  //       TotalEarned:rows[i].TotalEarned
+  //     }
+  //   }
+  // })
 
   console.log(obj)
 }
@@ -175,20 +333,17 @@ app.get('/', (req, res) => {
 
   else if (req.cookies.user_id) {
     // res.json(req.cookies.user_id)
-    try {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       conn.query(Hours, (err,rows) =>{
-        if(err) throw err;
+
         res.render("Home", {Hours:rows})
 
       })
 
       // res.render('Home')
 
-    } catch (error) {
-      console.log("error")
-    }
+   
   }
 
   else {
@@ -315,7 +470,7 @@ app.post('/SignUpAuth', (req, res) => {
 
 
           // })
-          res.redirect('/')
+          res.redirect('/Login')
         })
 
       })
