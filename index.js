@@ -161,6 +161,7 @@ cron.schedule("*/15 * * * * *", () =>{
 
 
 function getTotalEarned(ID, EndPeriod, Wage, deduction , PayDate) {
+  let currentDate = moment();
 
   let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
   conn.query(makePayOut, (err,rows) =>{
