@@ -20,6 +20,8 @@ import cookieSession from 'cookie-session';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '.env') });
+//https://stackoverflow.com/questions/1754411/how-to-select-date-from-datetime-column
+//Link for the dates
 
 // import env from 'dotenv'
 // import sharp from 'sharp';
@@ -105,13 +107,15 @@ cron.schedule("*/15 * * * * *", () =>{
       for(let i in rows) {
         let ID = rows[i].User_id;
         let EndPeriod = moment(rows[i].User_EndPeriodDate);
+        let nextDayPeriodDay = EndPeriod.add(1,'day', true)
         let Wage = rows[i].User_wage
         let PaymentPeriod = rows[i].Payment;
         let PayDate = rows[i].User_PayOut;
         let deduction = rows[i].User_deduction;
         let currentDate = moment()
-        let DaysLeft = Math.ceil(currentDate.diff(currentDate, "days", true))
-        console.log(DaysLeft);
+        let DaysLeft = Math.ceil(currentDate.diff(EndPeriod, "days", true))
+        let NextDaysLeft = Math.ceil(currentDate.diff(nextDayPeriodDay, "days", true))
+      
 
         if(DaysLeft === 0) {
 
@@ -165,6 +169,10 @@ function getTotalEarned(ID, EndPeriod, Wage, deduction , PayDate) {
 
   let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
   conn.query(makePayOut, (err,rows) =>{
+
+    if(rows[0].length === 0) {
+      console.log("No Data")
+    }
     let obj = {
       totalHours: rows[0].Total,
       totalMoney:rows[0].totalEarned,
