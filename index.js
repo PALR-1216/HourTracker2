@@ -196,6 +196,7 @@ cron.schedule("*/1 * * * * *", () =>{
 
       }
 
+
       else  {
        
       }
@@ -204,6 +205,8 @@ cron.schedule("*/1 * * * * *", () =>{
     }
   })
 })
+
+
 
 function getTotalEarned(ID, EndPeriod) {
   let currentDate = moment();
@@ -221,10 +224,8 @@ function getTotalEarned(ID, EndPeriod) {
     }
     let insertDB = `insert into PayOuts Values ('${nanoid()}', '${ID}', '${moment(EndPeriod).format("YYYY/MM/DD")}', '${moment(currentDate).format("YYYY/MM/DD")}', ${obj.totalMoney}, ${obj.totalHours}, ${obj.totalTax}, '${moment(PayDate).format("YYYY/MM/DD")}', ${0})`
     console.log(insertDB)
-
     console.table(obj)
-  }) 
-
+  })
 }
 
 
@@ -373,6 +374,7 @@ function getUserTotalPay(ID) {
   console.log(obj)
 }
 
+
 app.get('/', (req, res) => {
 
   // res.render('Login');
@@ -392,8 +394,6 @@ app.get('/', (req, res) => {
       })
 
       // res.render('Home')
-
-   
   }
 
   else {
