@@ -155,6 +155,11 @@ cron.schedule("*/15 * * * * *", () =>{
         }
 
         else if(DaysLeft > 0) {
+          // conn.query('select * from ', (err,rows)=>{
+          //   console.log(rows)
+          // })
+          console.log(`Days left for user - ${ID} Days: ${DaysLeft}`)
+        
 
         }
       }
