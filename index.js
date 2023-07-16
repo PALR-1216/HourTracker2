@@ -94,77 +94,118 @@ app.use(session({
 
 }))
 
-cron.schedule("*/15 * * * * *", () =>{
-  //GET USER END PERIOD DATE
-  let sql = ` select User_id, User_EndPeriodDate,Payment,User_deduction, User_PayOut, User_wage from Users`;
-  conn.query(sql, (err,rows) =>{
-    if(err) {
-      console.log("error in Period Checker Bot")
-      throw err;
-    }
+// cron.schedule("*/15 * * * * *", () =>{
 
-    if(rows.length != 0) {
-      for(let i in rows) {
-        let ID = rows[i].User_id;
-        let EndPeriod = moment(rows[i].User_EndPeriodDate);
-        let nextDayPeriodDay = EndPeriod.add(1,'day', true)
-        let Wage = rows[i].User_wage
-        let PaymentPeriod = rows[i].Payment;
-        let PayDate = rows[i].User_PayOut;
-        let deduction = rows[i].User_deduction;
-        let currentDate = moment()
-        let DaysLeft = Math.ceil(currentDate.diff(EndPeriod, "days", true))
-        let NextDaysLeft = Math.ceil(currentDate.diff(nextDayPeriodDay, "days", true))
+
+//   //GET USER END PERIOD DATE
+//   let sql = ` select User_id, User_EndPeriodDate,Payment,User_deduction, User_PayOut, User_wage from Users`;
+//   conn.query(sql, (err,rows) =>{
+//     if(err) {
+//       console.log("error in Period Checker Bot")
+//       throw err;
+//     }
+
+//     if(rows.length != 0) {
+//       for(let i in rows) {
+//         let ID = rows[i].User_id;
+//         let EndPeriod = moment(rows[i].User_EndPeriodDate);
+//         let nextDayPeriodDay = EndPeriod.add(1,'day', true)
+//         let Wage = rows[i].User_wage
+//         let PaymentPeriod = rows[i].Payment;
+//         let PayDate = rows[i].User_PayOut;
+//         let deduction = rows[i].User_deduction;
+//         let currentDate = moment()
+//         let DaysLeft = Math.ceil(currentDate.diff(EndPeriod, "days", true))
+//         let NextDaysLeft = Math.ceil(currentDate.diff(nextDayPeriodDay, "days", true))
       
 
-        if(DaysLeft === 0) {
+//         if(NextDaysLeft === 0) {
 
-          if(PaymentPeriod === "Weekly") {
-            let nextDate = moment(currentDate.add(7, "days", true)).calendar()
+//           if(PaymentPeriod === "Weekly") {
+//             // let nextDate = moment(currentDate.add(7, "days", true)).calendar()
+//             let nextNewPeriod = moment(EndPeriod.add(7,'days', true))
+//             console.log(nextNewPeriod)
            
-            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
-            getTotalEarned(ID, currentDate,  EndPeriod, Wage, deduction, PayDate );
+//             // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+//             getTotalEarned(ID, currentDate,  EndPeriod, Wage, deduction, PayDate );
   
-            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
-            console.log(NextEndPeriod)
+//             let NextEndPeriod = `update Users set User_EndPeriodDate='${nextNewPeriod}' where User_id = '${ID}'`
+//             conn.commit(NextEndPeriod)
+
 
   
-          }
+//           }
   
-          else if(PaymentPeriod === "Biweekly") {
-            let nextDate = moment(currentDate.add(14, "days", true)).calendar()
-            getTotalEarned(ID, currentDate, EndPeriod, Wage, deduction, PayDate );
+//           else if(PaymentPeriod === "Biweekly") {
+//             let nextNewPeriod = moment(EndPeriod.add(14,'days', true))
+//             console.log(nextNewPeriod)
+
+//             getTotalEarned(ID, currentDate, EndPeriod, Wage, deduction, PayDate );
 
            
-            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+//             // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
   
-            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
-            console.log(NextEndPeriod)
-  
-          }
-  
-          else if(PaymentPeriod === "Monthly") {
-            let nextDate = moment(currentDate.add(30, "days", true)).calendar()
-            console.log(ID)
-            // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
-  
-            let NextEndPeriod = `update Users set User_EndPeriodDate='${nextDate}' where User_id = '${ID}'`
-            console.log(NextEndPeriod)
-  
-          }  
-        }
+//             let NextEndPeriod = `update Users set User_EndPeriodDate='${nextNewPeriod}' where User_id = '${ID}'`
+//             conn.commit(NextEndPeriod)
 
-        else if(DaysLeft > 0) {
+//             console.log(NextEndPeriod)
+  
+//           }
+  
+//           else if(PaymentPeriod === "Monthly") {
+//             let nextNewPeriod = moment(EndPeriod.add(30, "days", true))
+//             // getUserPayPeriod(ID, EndPeriod, deduction, PayDate)
+  
+//             let NextEndPeriod = `update Users set User_EndPeriodDate='${nextNewPeriod}' where User_id = '${ID}'`
+//             conn.commit(nextNewPeriod)
+//             console.log(NextEndPeriod)
+  
+//           }  
+//         }
 
-        }
+//         else if(DaysLeft > 0) {
+//           console.log(`Days left - ${ID} Days - ${DaysLeft}`)
+
+//         }
+//       }
+//     }
+//   })
+
+// })
+
+
+//cron job for showing the user the date of end period
+
+
+
+
+
+cron.schedule("*/1 * * * * *", () =>{
+  let selectUser = `select User_id, User_EndPeriodDate from Users`;
+  conn.query(selectUser, (err,rows) =>{
+    if(err) throw err;
+
+    for(let i in rows) {
+      let ID = rows[i].User_id;
+      let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate).calendar()
+      let currentDate = moment().format("MM/DD/YYYY")
+
+      if(currentDate === User_EndPeriodDate) {
+        getTotalEarned(ID, User_EndPeriodDate)
+        
+
       }
+
+      else  {
+       
+      }
+      console.log(currentDate);
+      console.log(User_EndPeriodDate)
     }
   })
-
 })
 
-
-function getTotalEarned(ID, EndPeriod, Wage, deduction , PayDate) {
+function getTotalEarned(ID, EndPeriod) {
   let currentDate = moment();
 
   let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
