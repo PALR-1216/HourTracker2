@@ -178,11 +178,11 @@ app.use(session({
 
 
 
-
-
 cron.schedule("*/1 * * * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
+
   conn.query(selectUser, (err,rows) =>{
+
     if(err) throw err;
 
     for(let i in rows) {
@@ -198,10 +198,12 @@ cron.schedule("*/1 * * * * *", () =>{
 
         else if(DaysLeft > 0) {
 
+
         }
-      }
+      
     }
   })
+
 })
 
 
