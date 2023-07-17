@@ -196,12 +196,10 @@ cron.schedule("*/1 * * * * *", () =>{
 
       }
 
+        else if(DaysLeft > 0) {
 
-      else  {
-       
+        }
       }
-      console.log(currentDate);
-      console.log(User_EndPeriodDate)
     }
   })
 })
