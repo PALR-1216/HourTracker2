@@ -183,49 +183,54 @@ cron.schedule("*/1 * * * * *", () =>{
 
   conn.query(selectUser, (err,rows) =>{
 
-    if(err) throw err;
+    if(rows.length != 0) {
 
-    for(let i in rows) {
-      let ID = rows[i].User_id;
-      let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate).calendar()
-      let currentDate = moment().format("MM/DD/YYYY")
 
-      if(currentDate === User_EndPeriodDate) {
-        getTotalEarned(ID, User_EndPeriodDate)
-        
+      if(err) throw err;
 
-      }
+      for(let i in rows) {
+        let ID = rows[i].User_id;
+        let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
+        let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'day', true).format("MM/DD/YYYY")
+        console.log(getNextDayOfPeriodEnd)
+        let currentDate = moment().format("MM/DD/YYYY")
 
-        else if(DaysLeft > 0) {
-
+        if(currentDate === getNextDayOfPeriodEnd) {
+          getTotalEarned(ID, User_EndPeriodDate)
+          
 
         }
-      
-    }
+
+        else {
+          console.log("Days still lefts")
+        } 
+      }
+      }
   })
+  
 
 })
+
 
 
 
 function getTotalEarned(ID, EndPeriod) {
   let currentDate = moment();
 
-  let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
-  conn.query(makePayOut, (err,rows) =>{
+  let selectUser = `select User_deduction, User_EndPeriodDate from Users where User_id = '${ID}'`
+  conn.query(selectUser, (err,rows) =>{
+    if(err) throw err;
 
-    if(rows[0].length === 0) {
-      console.log("No Data")
+    if(rows.length != 0) {
+      let UserDeduction = rows[0].User_deduction;
+      let UserPeriodEnd = rows[0].User_EndPeriodDate
+      console.log(UserDeduction)
     }
-    let obj = {
-      totalHours: rows[0].Total,
-      totalMoney:rows[0].totalEarned,
-      totalTax:rows[0].TotalTaxes
-    }
-    let insertDB = `insert into PayOuts Values ('${nanoid()}', '${ID}', '${moment(EndPeriod).format("YYYY/MM/DD")}', '${moment(currentDate).format("YYYY/MM/DD")}', ${obj.totalMoney}, ${obj.totalHours}, ${obj.totalTax}, '${moment(PayDate).format("YYYY/MM/DD")}', ${0})`
-    console.log(insertDB)
-    console.table(obj)
+
   })
+
+  // let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
+
 }
 
 
