@@ -224,12 +224,28 @@ function getTotalEarned(ID, EndPeriod) {
     if(rows.length != 0) {
       let UserDeduction = rows[0].User_deduction;
       let UserPeriodEnd = rows[0].User_EndPeriodDate
-      console.log(UserDeduction)
+      let makePayPeriod = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${UserPeriodEnd}) as TotalTaxes from Hours where UserID = '${ID}';`
+      conn.query(makePayPeriod,(err,PeriodCheck) =>{
+        if(err) throw err;
+
+        if(PeriodCheck[0].Total ==  null){
+          console.log("no Data")
+        }
+
+        else{
+          console.log(PeriodCheck)
+          //TODO: Insert into PayOut a new PayPeriod
+          //TODO: 1, call a function to insert PayOut
+          //TODO: 2, call a function to update the users PayPeriod End
+
+
+        }
+      })
+
     }
 
   })
 
-  // let makePayOut = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction}) as TotalTaxes from Hours where UserID = '${ID}';`
 
 }
 
