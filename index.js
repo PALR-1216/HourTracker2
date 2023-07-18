@@ -228,12 +228,13 @@ function getTotalEarned(ID, EndPeriod) {
       conn.query(makePayPeriod,(err,PeriodCheck) =>{
         if(err) throw err;
 
-        if(PeriodCheck[0].Total ==  null){
+        if(PeriodCheck[0].Total === 0){
           console.log("no Data")
         }
 
         else{
           console.log(PeriodCheck)
+ 
           //TODO: Insert into PayOut a new PayPeriod
           //TODO: 1, call a function to insert PayOut
           //TODO: 2, call a function to update the users PayPeriod End
@@ -409,8 +410,7 @@ app.get('/', (req, res) => {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       conn.query(Hours, (err,rows) =>{
-
-        res.render("Home", {Hours:rows})
+          res.render("Home", {Hours:rows})
 
       })
 
