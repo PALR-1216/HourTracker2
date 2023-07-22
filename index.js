@@ -20,7 +20,7 @@ import cookieSession from 'cookie-session';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '.env') });
-//https://stackoverflow.com/questions/1754411/how-to-select-date-from-datetime-column
+//https://stackoverflow.com/question/1754411/how-to-select-date-from-datetime-column
 //Link for the dates
 
 // import env from 'dotenv'
@@ -109,18 +109,18 @@ cron.schedule("*/1 * * * * *", () =>{
       for(let i in rows) {
         let ID = rows[i].User_id;
         let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
-        let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'day', true).format("MM/DD/YYYY")
+        let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
         // console.log(getNextDayOfPeriodEnd)
         let currentDate = moment().format("MM/DD/YYYY")
 
-        if(currentDate === getNextDayOfPeriodEnd) {
-          getTotalEarned(ID, User_EndPeriodDate)
+        if(getNextDayOfPeriodEnd === currentDate) {
+          getTotalEarned(ID, User_EndPeriodDate, getNextDayOfPeriodEnd)
           
 
         }
 
         else {
-          // console.log("Not Today")
+          // console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
         } 
         }
       }
@@ -132,7 +132,7 @@ cron.schedule("*/1 * * * * *", () =>{
 
 
 
-function getTotalEarned(ID, EndPeriod) {
+function getTotalEarned(ID, EndPeriod,getNextDayOfPeriodEnd) {
   let currentDate = moment();
 
   let selectUser = `select User_deduction, User_EndPeriodDate, User_PayOut, Payment, AccountCreated from Users where User_id = '${ID}'`
@@ -158,11 +158,14 @@ function getTotalEarned(ID, EndPeriod) {
             totalEarned:PeriodCheck[0].totalEarned,
             TotalTaxes:PeriodCheck[0].TotalTaxes,
             DateEnd: UserPeriodEnd.format("MMM DD"),
-            NextDayperiodEnd:UserPeriodEnd.add(1,'days', true).format("MMM DD")
+            NextDayperiodEnd:UserPeriodEnd.add(1,'days', true).format("MMM DD"),
+            PaymentType: rows[0].Payment
 
           }
+          
 
-          CreatePayOutPeriodCheck(PeriodCheck[0].Total, PayOutObj.totalEarned, PayOutObj.TotalTaxes, PayOutObj.DateEnd,PayOutObj.NextDayperiodEnd, ID, UserPayOutDate,PeriodCheck[0].Payment , PeriodCheck[0].AccountCreated);
+
+          CreatePayOutPeriodCheck(PeriodCheck[0].Total, PayOutObj.totalEarned, PayOutObj.TotalTaxes, PayOutObj.DateEnd,PayOutObj.NextDayperiodEnd, ID, UserPayOutDate,rows[0].Payment , PeriodCheck[0].AccountCreated, getNextDayOfPeriodEnd);
           //TODO: Insert into PayOut a new PayPeriod
           //TODO: 1, call a function to insert PayOut
           //TODO: 2, call a function to update the users PayPeriod End
@@ -174,45 +177,41 @@ function getTotalEarned(ID, EndPeriod) {
   })
 }
 
-function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, UserID, UserPayOutDate, PaymentType, AccountCreated) {
+function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, UserID, UserPayOutDate, PaymentType, AccountCreated, getNextDayOfPeriodEnd) {
 
   //NEED to check if Date is greater than AccountDate if is greater then just put the account Date as the Firsdt Date
   //check diference in time is the current dat enad the date created
   let DateCreated = moment(AccountCreated)
-
-  let checkPayOut = `select PayOut_ID where User_ID = '${UserID}'`
-  conn.query(checkPayOut, (err,rows) =>{
-    if(err){throw err.message}
-    if(rows.length == 0) {
-      //then it has no payOutcheck then the date will be the date of athe account created
-    }
-  })
+ 
   
-  if(PaymentType == "Biweekly") {
+  if(PaymentType === "Biweekly") {
+    console.log(PaymentType)
 
     
     let CheckAccountCreated = moment(AccountCreated)
-    console.log(CheckAccountCreated)
+    // console.log(CheckAccountCreated)
     let FirstDate = moment(NextDayPeriod).subtract(14, 'days', true).format("MMM DD")
 
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    console.log(insertIntoPayOut)
-    DeleteAllHoursFromPayPeriod(UserID, FirstDate, DateEnd)
+    // console.log(insertIntoPayOut)
+    DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
     
   }
 
-  else if(PaymentType == "Weekly") {
+  else if(PaymentType === "Weekly") {
+    console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(7, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    console.log(insertIntoPayOut)
-    DeleteAllHoursFromPayPeriod(UserID, FirstDate, DateEnd)
+    // console.log(insertIntoPayOut)
+    DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
   }
 
-  else if(PaymentType == "Monthly") {
+  else if(PaymentType === "Monthly") {
+    console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(30, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    console.log(insertIntoPayOut)
-    DeleteAllHoursFromPayPeriod(UserID, FirstDate, DateEnd)
+    // console.log(insertIntoPayOut)
+    DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
 
   }
 
@@ -220,8 +219,52 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
   //Now Delete al the hours from that payDate 
 }
 
-function DeleteAllHoursFromPayPeriod() {
+function DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd) {
+  let currentDate = moment();
+  console.log(getNextDayOfPeriodEnd)
+  //still needs work
+  let sqlDelete = `select * from Hours where Date < '${getNextDayOfPeriodEnd}' and  UserID = '${UserID}';`
+  console.log(sqlDelete)
+  // conn.query(sqlDelete,(rows,err) =>{
+  //   if(err) throw err
 
+  //   console.log(rows)
+  // })
+
+  UpdateNextPeriodDate(UserID);
+}
+
+
+function UpdateNextPeriodDate(ID) {
+
+  let user =`select User_EndPeriodDate, Payment from Users where User_id = '${ID}'`
+  conn.query(user,(err,rows) =>{
+    if(err) throw err
+    let Date = moment(rows[0].User_EndPeriodDate)
+    let PaymentType = rows[0].Payment;
+
+    if(PaymentType === "Weekly") {
+        let nextDate = moment(Date.add(7,'days', true))
+        console.log(nextDate)
+        console.log("Weekly")
+
+    }
+
+    else if (PaymentType === "Biweekly"){
+        let nextDate = moment(Date.add(14,'days', true))
+        console.log(nextDate)
+        console.log("Biweekly")
+
+    }
+
+    else  {
+      let nextDate = moment(Date.add(30,'days', true))
+      console.log(nextDate)
+      console.log("Monthly")
+
+    }
+
+  })
 }
 
 
