@@ -246,6 +246,7 @@ function UpdateNextPeriodDate(ID) {
     if(PaymentType === "Weekly") {
         let nextDate = moment(Date.add(7,'days', true))
         console.log(nextDate)
+        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
         console.log("Weekly")
 
     }
@@ -253,6 +254,7 @@ function UpdateNextPeriodDate(ID) {
     else if (PaymentType === "Biweekly"){
         let nextDate = moment(Date.add(14,'days', true))
         console.log(nextDate)
+        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
         console.log("Biweekly")
 
     }
@@ -260,10 +262,10 @@ function UpdateNextPeriodDate(ID) {
     else  {
       let nextDate = moment(Date.add(30,'days', true))
       console.log(nextDate)
+      let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
       console.log("Monthly")
 
     }
-
   })
 }
 
