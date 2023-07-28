@@ -181,7 +181,6 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
 
   //NEED to check if Date is greater than AccountDate if is greater then just put the account Date as the Firsdt Date
   //check diference in time is the current dat enad the date created
-  let DateCreated = moment(AccountCreated)
  
   
   if(PaymentType === "Biweekly") {
@@ -193,6 +192,7 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     let FirstDate = moment(NextDayPeriod).subtract(14, 'days', true).format("MMM DD")
 
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
+    conn.commit(insertIntoPayOut)
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
     
@@ -202,6 +202,7 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(7, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
+    conn.commit(insertIntoPayOut)
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
   }
@@ -210,6 +211,7 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(30, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
+    conn.commit(insertIntoPayOut)
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
 
@@ -223,15 +225,24 @@ function DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd) {
   let currentDate = moment();
   console.log(getNextDayOfPeriodEnd)
   //still needs work
-  let sqlDelete = `select * from Hours where Date < '${getNextDayOfPeriodEnd}' and  UserID = '${UserID}';`
+  let sqlDelete = `delete from Hours where UserID = '${UserID}' and Date < '${getNextDayOfPeriodEnd}';`
   console.log(sqlDelete)
-  // conn.query(sqlDelete,(rows,err) =>{
-  //   if(err) throw err
 
-  //   console.log(rows)
-  // })
+  conn.query(sqlDelete,(rows,err) =>{
+    try {
+      UpdateNextPeriodDate(UserID);
+      
+    } catch (error) {
+      if(err) throw err
+      console.log("error")
+      
+    }
+   
 
-  UpdateNextPeriodDate(UserID);
+    console.log(rows)
+  })
+
+  // UpdateNextPeriodDate(UserID);
 }
 
 
@@ -244,25 +255,28 @@ function UpdateNextPeriodDate(ID) {
     let PaymentType = rows[0].Payment;
 
     if(PaymentType === "Weekly") {
-        let nextDate = moment(Date.add(7,'days', true))
+        let nextDate = moment(Date.add(7,'days', true)).format("MM/DD/YY")
         console.log(nextDate)
-        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
+        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
+        conn.commit(commit)
         console.log("Weekly")
 
     }
 
     else if (PaymentType === "Biweekly"){
-        let nextDate = moment(Date.add(14,'days', true))
+        let nextDate = moment(Date.add(14,'days', true)).format("MM/DD/YY")
         console.log(nextDate)
-        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
+        let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
+        conn.commit(commit)
         console.log("Biweekly")
 
     }
 
     else  {
-      let nextDate = moment(Date.add(30,'days', true))
+      let nextDate = moment(Date.add(30,'days', true)).format("MM/DD/YY")
       console.log(nextDate)
-      let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}' `
+      let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
+      conn.commit(commit)
       console.log("Monthly")
 
     }
@@ -272,28 +286,6 @@ function UpdateNextPeriodDate(ID) {
 
 
 
-function getUserTotalPay(ID) {
-  let sql = `select * from Hours where UserID = '${ID}'`;
-  let obj = {};
-  let isPayDate = 1;
-    let showPayOut = `update PayOuts set IsPayOutDate = ${isPayDate} where User_ID = '${ID}'`
-    // conn.commit(showPayOut)
-
-  // conn.query(sql, (err,rows) =>{
-  //   if(err) throw err;
-
-  //   for(let i in rows) {
-  //      obj = {
-  //       UserID:rows[i].UserID,
-  //       TotalHours:rows[i].TotalHours,
-  //       TotalBreak:rows[i].TotalBreak,
-  //       TotalEarned:rows[i].TotalEarned
-  //     }
-  //   }
-  // })
-
-  console.log(obj)
-}
 
 
 app.get('/', (req, res) => {
