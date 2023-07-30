@@ -299,8 +299,24 @@ app.get('/', (req, res) => {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       conn.query(Hours, (err,rows) =>{
-          res.render("Home", {Hours:rows})
+        let obj = {}
+        let HoursArray = []
+        for(let i in rows) { 
+          obj ={
+            ClockIn:rows[i].ClockIn,
+            clockOut:rows[i].clockOut,
+            Startbreak:rows[i].Startbreak || "No Break",
+            EndBreak:rows[i].EndBreak || "No Break",
+            Date:moment(`${rows[i].Date}`),
+            totalHours:rows[i].TotalHours,
+            TotalEarned:rows[i].TotalEarned
 
+          }
+          console.log(obj)
+          HoursArray.push(obj)
+        }
+        
+          res.render("Home", {Hours:HoursArray}) 
       })
 
       // res.render('Home')
@@ -384,7 +400,7 @@ app.post('/SignUpAuth', (req, res) => {
   let year = dateObj.getFullYear().toString().slice(-2)
   let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
   let date = ("0" + dateObj.getDate()).slice(-2);
-  let AllDate = year + "/" + month + "/" + date
+  let AllDate = month + "/" + date + "/" + year
 
 
 
@@ -516,7 +532,7 @@ app.post('/calculateHour', (req, res) => {
       let year = checkIn.getFullYear().toString().slice(-2);
       let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
       let date = ('0' + checkIn.getDate()).slice(-2);
-      let AllDate = year + '/' + month + '/' + date;
+      let AllDate = month + '/' + date + '/' + year;
 
       let hour1 = checkIn.toLocaleTimeString('en-US', options);
       let hour2 = clockOut.toLocaleTimeString('en-US', options);

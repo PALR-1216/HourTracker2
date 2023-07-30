@@ -28,24 +28,11 @@
 
     <!-- if data array is empty show lottie with no footer else show footer and data -->
 <% if (Hours.length >= 1) { %>
-  <% for( let i=0; i < Hours.length; i++ ) { %>
-    
-    <div class="container" >
-      <h1><%= Hours[i].ClockIn %></h1>
 
-    </div>
-
-
-    <% } %>
+      <%- include('Containers/HoursContainer', { Hours: Hours}); -%>
 
       <% } else{%>
 
-        
-
-  
-    
-   
-      
 
 
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->

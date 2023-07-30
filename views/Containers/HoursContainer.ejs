@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" integrity="sha512-CryKbMe7sjSCDPl18jtJI5DR5jtkUWxPXWaLCst6QjH8wxDexfRJic2WRmRXmstr2Y8SxDDWuBO6CQC6IE4KTA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Time Tracking Table</title>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <div class="bg-gray-200 p-4 rounded">
+        <h1 class="text-3xl font-bold mb-6">Hours</h1>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse table-auto">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700">
+                        <th class="px-4 py-2 ">Date</th>
+                        <th class="px-4 py-2">Clock In</th>
+                        <th class="px-4 py-2">Clock Out</th>
+                        <th class="px-4 py-2">Start Break Time</th>
+                        <th class="px-4 py-2">End Break Time</th>
+                        <th class="px-4 py-2">Total Hours</th>
+                        <th class="px-4 py-2">Total Earned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data -->
+                    <% for( let i=0; i < Hours.length; i++ ) { %>
+                     
+                    <tr class="border-t">
+                        <td class="px-4 py-2"><<%=Hours[i].Date%></td>
+                        <td class="px-4 py-2"><%=Hours[i].ClockIn%></td>
+                        <td class="px-4 py-2"><%=Hours[i].ClockOut%></td>
+                        <td class="px-4 py-2"><%if(Hours[i].Startbreak == null) {%>No Break<%}else{%><%=Hours[i].Startbreak%> <%}%></td>
+                        <td class="px-4 py-2"><%if(Hours[i].EndBreak == null) {%>No Break<%}else{%><%=Hours[i].EndBreak%> <%}%></td>
+                        <td class="px-4 py-2"><%=Hours[i].TotalHours%></td>
+                        <td class="px-4 py-2">$<%=Hours[i].TotalEarned%></td>
+                    </tr>
+                    <% } %>
+                  
+                    <!-- Add more rows here -->
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</body>
+
+</html>
