@@ -300,6 +300,11 @@ app.get('/', (req, res) => {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       let user = `select User_id, User_deduction from Users where User_id = '${req.cookies.user_id}'`;
+      console.log(user)
+      conn.query(user, (err,userInfo) =>{
+        if(err) throw err;
+        console.log(userInfo)
+      })
       
       conn.query(Hours, (err,rows) =>{
         let obj = {}
@@ -318,23 +323,12 @@ app.get('/', (req, res) => {
        
           HoursArray.push(obj)
         }
-          // res.render("Home", {Hours:HoursArray}) 
-     
-      conn.query(user, (err,UserInfo) =>{
-        if(err) throw err;
-        console.log(userInfo)
-        let UserDeduction = userInfo[0].User_deduction
-        
-        let total = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${UserDeduction}) as TotalTaxes from Hours where UserID = '${req.cookies.user_id}';`
-        conn.query(total, (err,totalSum) =>{
-          if(err) throw err
-
-          res.render("Home", {Hours:HoursArray, Total:totalSum}) 
-
-        })
-
-      })
+        console.log(obj)
+          res.render("Home", {Hours:HoursArray}) 
+    
     })
+
+    
 
   }
 
