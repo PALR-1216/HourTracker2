@@ -96,7 +96,7 @@ app.use(session({
 
 
 
-cron.schedule("*/1 * * * * *", () =>{
+cron.schedule("0 0 * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
 
   conn.query(selectUser, (err,rows) =>{
@@ -125,8 +125,6 @@ cron.schedule("*/1 * * * * *", () =>{
         }
       }
   })
-  
-
 })
 
 
