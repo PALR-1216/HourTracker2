@@ -300,12 +300,7 @@ app.get('/', (req, res) => {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       let user = `select User_id, User_deduction from Users where User_id = '${req.cookies.user_id}'`;
-      console.log(user)
-      conn.query(user, (err,userInfo) =>{
-        if(err) throw err;
-        console.log(userInfo)
-      })
-      
+
       conn.query(Hours, (err,rows) =>{
         let obj = {}
         let HoursArray = []
