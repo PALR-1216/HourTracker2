@@ -15,6 +15,7 @@ import cron from 'node-cron'
 import nodemailer from 'nodemailer'
 import moment from 'moment';
 import cookieSession from 'cookie-session';
+import { userInfo } from 'os';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -298,28 +299,43 @@ app.get('/', (req, res) => {
     // res.json(req.cookies.user_id)
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
+      let user = `select User_id, User_deduction from Users where User_id = '${req.cookies.user_id}'`;
+      
       conn.query(Hours, (err,rows) =>{
         let obj = {}
         let HoursArray = []
         for(let i in rows) { 
           obj ={
             ClockIn:rows[i].ClockIn,
-            clockOut:rows[i].clockOut,
+            ClockOut:rows[i].ClockOut,
             Startbreak:rows[i].Startbreak || "No Break",
             EndBreak:rows[i].EndBreak || "No Break",
-            Date:moment(`${rows[i].Date}`),
-            totalHours:rows[i].TotalHours,
+            Date:moment(rows[i].Date).format("MMM DD"),
+            TotalHours:rows[i].TotalHours,
             TotalEarned:rows[i].TotalEarned
 
           }
-          console.log(obj)
+       
           HoursArray.push(obj)
         }
+          // res.render("Home", {Hours:HoursArray}) 
+     
+      conn.query(user, (err,UserInfo) =>{
+        if(err) throw err;
+        console.log(userInfo)
+        let UserDeduction = userInfo[0].User_deduction
         
-          res.render("Home", {Hours:HoursArray}) 
-      })
+        let total = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${UserDeduction}) as TotalTaxes from Hours where UserID = '${req.cookies.user_id}';`
+        conn.query(total, (err,totalSum) =>{
+          if(err) throw err
 
-      // res.render('Home')
+          res.render("Home", {Hours:HoursArray, Total:totalSum}) 
+
+        })
+
+      })
+    })
+
   }
 
   else {
