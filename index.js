@@ -318,7 +318,7 @@ app.get('/', (req, res) => {
        
           HoursArray.push(obj)
         }
-        console.log(obj)
+        // console.log(obj)
           res.render("Home", {Hours:HoursArray}) 
     
     })
