@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="https://kit.fontawesome.com/d31d9fbed5.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -14,7 +16,7 @@
 
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8 ">
-
+<!-- 
       <div class="pb-3">
         <div class="bg-white shadow-lg rounded-lg grid p-6">
           <h2 class="text-2xl font-semibold mb-4">Accumulated Earnings</h2>
@@ -36,9 +38,66 @@
       </div>
 
 
-    
+     -->
   
-      
+     <div class="w-full mx-auto max-w-md px-4 py-8">
+      <!-- <h1 class="text-3xl font-bold mb-6">Income and Taxes Pie Chart</h1> -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <canvas id="incomeTaxesChart"></canvas>
+      </div>
+    </div>
+  
+
+    <script>
+      // Chart data (replace these with actual data)
+      const totalEarnedData = [3000];
+      const totalTaxesData = [500];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']; // Replace with appropriate labels
+
+      // Calculate total earnings and total taxes
+      const totalEarned = totalEarnedData.reduce(
+        (sum, value) => sum + value,
+        0
+      );
+      const totalTaxes = totalTaxesData.reduce(
+        (sum, value) => sum + value,
+        0
+      );
+
+      // Create the Chart.js pie chart
+      const ctx = document
+        .getElementById('incomeTaxesChart')
+        .getContext('2d');
+      const incomeTaxesChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: [
+            ['Total Earned', `$${totalEarnedData}`],
+            ['Total Taxes', `$${totalTaxesData}`],
+          ],
+          datasets: [
+            {
+              data: [totalEarned, totalTaxes],
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+              ],
+              borderColor: '#fff',
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'left',
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    </script>
 
 
 
