@@ -16,6 +16,7 @@ import nodemailer from 'nodemailer'
 import moment from 'moment';
 import cookieSession from 'cookie-session';
 import { userInfo } from 'os';
+import device from 'express-device'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -42,6 +43,9 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 app.set('trust proxy', 1);
 app.set('views', path.join("views"));
 app.set('view engine', 'ejs')
+
+app.use(device.capture());
+
 app.use(bodyParser.urlencoded({
   extended: true
 }))
@@ -288,6 +292,7 @@ function UpdateNextPeriodDate(ID) {
 
 
 app.get('/', (req, res) => {
+  let devicetype = ''
 
   // res.render('Login');
   if (req.cookies.user_id == null) {
@@ -300,6 +305,19 @@ app.get('/', (req, res) => {
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
       let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
       // let user = `select User_id, User_deduction from Users where User_id = '${req.cookies.user_id}'`;
+
+      if(req.device.type === 'phone') {
+        devicetype = 'phone'
+
+      }
+
+      else if(req.device.type === 'tablet') {
+        devicetype = 'tablet'
+
+      }else{
+        devicetype = 'desktop'
+        //desktop
+      }
 
       conn.query(Hours, (err,rows) =>{
         let obj = {}
@@ -319,7 +337,7 @@ app.get('/', (req, res) => {
           HoursArray.push(obj)
         }
         // console.log(obj)
-          res.render("Home", {Hours:HoursArray}) 
+          res.render("Home", {Hours:HoursArray, deviceType:devicetype}) 
     
     })
 

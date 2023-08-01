@@ -20,13 +20,8 @@
 
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8 ">
-<<<<<<< HEAD
 <!-- 
       <div class="pb-3">
-=======
-
-      <!-- <div class="pb-3">
->>>>>>> 66426f6a28c88bb052bb22e30b0f1a8ad8833eac
         <div class="bg-white shadow-lg rounded-lg grid p-6">
           <h2 class="text-2xl font-semibold mb-4">Accumulated Earnings</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -47,64 +42,12 @@
       </div> -->
 
 
-      <div class="container mx-auto px-4 py-8">
-        <!-- <h1 class="text-3xl font-bold mb-6">Income and Taxes Pie Chart</h1> -->
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <canvas id="incomeTaxesChart"></canvas>
-        </div>
-      </div>
+      
 
 
-<<<<<<< HEAD
-     -->
-=======
-
-      <script>
-        // Chart data (replace these with actual data)
-        const totalEarnedData = [3000];
-        const totalTaxesData = [500];
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']; // Replace with appropriate labels
-  
-        // Calculate total earnings and total taxes
-        const totalEarned = totalEarnedData.reduce(
-          (sum, value) => sum + value,
-          0
-        );
-        const totalTaxes = totalTaxesData.reduce((sum, value) => sum + value, 0);
-  
-        // Create the Chart.js pie chart
-        const ctx = document.getElementById('incomeTaxesChart').getContext('2d');
-        const incomeTaxesChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Total Earned', 'Total Taxes'],
-            datasets: [
-              {
-                data: [totalEarned, totalTaxes],
-                backgroundColor: [
-                  'rgba(75, 192, 192, 0.7)',
-                  'rgba(255, 99, 132, 0.7)',
-                ],
-                borderColor: '#fff',
-                borderWidth: 2,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-          },
-
-          
-        });
-      </script>
-
-
-    
->>>>>>> 66426f6a28c88bb052bb22e30b0f1a8ad8833eac
   
      <div class="w-full mx-auto max-w-md px-4 py-8">
-      <!-- <h1 class="text-3xl font-bold mb-6">Income and Taxes Pie Chart</h1> -->
+      <h1 class="text-3xl font-bold mb-6">Income and Taxes Pie Chart</h1>
       <div class="bg-white rounded-lg shadow-md p-4">
         <canvas id="incomeTaxesChart"></canvas>
       </div>
