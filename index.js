@@ -303,7 +303,8 @@ app.get('/', (req, res) => {
   else if (req.cookies.user_id) {
     // res.json(req.cookies.user_id)
       // let sql = `select User_Name, User_email, Users_ProfileImage from Users where User_id = '${req.cookies.user_id}'`;
-      let Hours = `select * from Hours where UserID = '${req.cookies.user_id}'`
+      let Hours = `select * from Hours where UserID='${req.cookies.user_id}' order by Date desc;`;
+      
       // let user = `select User_id, User_deduction from Users where User_id = '${req.cookies.user_id}'`;
 
       if(req.device.type === 'phone') {

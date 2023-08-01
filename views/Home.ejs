@@ -30,11 +30,13 @@
 <% if (Hours.length >= 1) { %>
 
   <%if(deviceType === 'desktop') {%>
+    <!-- add chart too -->
     <%- include('Containers/HoursContainer', { Hours: Hours}); -%>
 
   <%}%>
 
   <%if(deviceType === 'phone') {%>
+    <!-- add chart too -->
     <%- include('Containers/HoursContainerMobile', { Hours: Hours}); -%>
 
 
