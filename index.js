@@ -320,18 +320,21 @@ app.get('/', (req, res) => {
         //desktop
       }
 
-      conn.query(`select User_wage,User_deduction from Users where User_Id='${req.cookies.user_id}'`,(err,userInfo) =>{
-        let deductions = userInfo[0].User_deduction;
-        let wage = userInfo[0].User_wage;
-        conn.query(`select SUM(TotalHours) as TotalH, SUM(TotalEarned) as TotalM from Hours where UserID='${req.cookies.user_id}';`, (err,Totals) =>{
-          if(err) {
-            console.log("total sum error")
-          }
+      // conn.query(`select User_wage,User_deduction from Users where User_Id='${req.cookies.user_id}'`,(err,userInfo) =>{
+      //   let deductions = userInfo[0].User_deduction;
+      //   let wage = userInfo[0].User_wage;
+      //   conn.query(`select SUM(TotalHours) as TotalH, SUM(TotalEarned) as TotalM from Hours where UserID='${req.cookies.user_id}';`, (err,Totals) =>{
+      //     if(err) {
+      //       console.log("total sum error")
+      //     }
 
-        
-        })
-
-      })
+      //     let Total = {
+      //       totalHours:Totals[0].TotalH,
+      //       totalMoney:Totals[0].TotalM,
+      //       taxes:Number(Totals[0].TotalM * deductions).toFixed(2)
+      //     }
+      //   })
+      // })
 
       conn.query(Hours, (err,rows) =>{
         let obj = {}
@@ -350,12 +353,31 @@ app.get('/', (req, res) => {
        
           HoursArray.push(obj)
         }
-        // console.log(obj)
 
-          res.render("Home", {Hours:HoursArray, deviceType:devicetype}) 
+        conn.query(`select User_wage,User_deduction from Users where User_Id='${req.cookies.user_id}'`,(err,userInfo) =>{
+          let deductions = userInfo[0].User_deduction;
+          let wage = userInfo[0].User_wage;
+          conn.query(`select SUM(TotalHours) as TotalH, SUM(TotalEarned) as TotalM from Hours where UserID='${req.cookies.user_id}';`, (err,Totals) =>{
+            if(err) {
+              console.log("total sum error")
+            }
+  
+             let TotalInfoObj = {
+              totalHours:Totals[0].TotalH,
+              totalMoney:Totals[0].TotalM,
+              taxes:Number(Totals[0].TotalM * deductions).toFixed(2)
+            }
+
+            // console.log(TotalInfoObj)
+            res.render("Home", {Hours:HoursArray, deviceType:devicetype, TotalHours:TotalInfoObj.totalHours, TotalMoney:TotalInfoObj.totalMoney, Totaltaxes:TotalInfoObj.taxes}) 
+
+          })
+        })
+
 
     
     })
+
 
     
   }
