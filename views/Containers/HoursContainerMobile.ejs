@@ -12,11 +12,142 @@
     <script src="https://kit.fontawesome.com/d31d9fbed5.js" crossorigin="anonymous"></script>
   </head>
 
-  <body class="bg-gray-100">
+  <body class="">
+
+
+
+
+    <div class="bg-gray-200 container mx-auto p-2 lg:p-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <!-- Total Hours Container -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+          <h2 class="text-lg font-bold mb-4">User Total Hours</h2>
+          <p class="text-base mb-2">Total Hours Worked This Month</p>
+          <p class="text-4xl font-bold">1</p>
+          <div class="mt-4">
+            <div class="text-sm text-gray-500">
+              From 1st July to 31st July 2023
+            </div>
+            <!-- Optional Progress Indicator: Replace the example with real progress data -->
+            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-green-500" style="width: 70%"></div>
+            </div>
+            <div class="text-sm text-gray-500 mt-1">70% towards goal</div>
+            <!-- Optional Comparison with Previous Period: Replace the example with real data -->
+            <div class="text-sm text-gray-500 mt-1">Last Month: 140 hours</div>
+          </div>
+          <!-- Optional Interactive Element: Replace the example with real interaction functionality -->
+        </div>
+
+        <!-- Earnings and Taxes Container with Doughnut Chart -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-2">
+          <h2 class="text-lg font-bold mb-4">User Earnings and Taxes</h2>
+          <div class="relative aspect-w-1 aspect-h-1">
+            <canvas id="earningsChart"></canvas>
+            <!-- This element will display the total earned inside the doughnut chart -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center" id="totalEarnedDisplayContainer">
+                <p
+                  class="text-xl font-bold text-gray-700"
+                  style="color: #68d391"
+                  id="totalEarnedDisplay"
+                >
+                  Earnings $400
+                </p>
+                <p
+                  class="text-xl font-bold text-gray-700"
+                  style="color: #fc8181"
+                  id="totalEarnedDisplay"
+                >
+                  Taxes $400
+                </p>
+                <!-- <p class="text-sm text-gray-500">Total Earned</p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Replace these example data with your user's earnings and taxes data
+        const earningsData = {
+          labels: ['Earnings', 'Taxes'],
+          datasets: [
+            {
+              data: [3500, 800], // Replace with actual data
+              backgroundColor: ['#68D391', '#FC8181'], // Green for earnings, Red for taxes
+              borderWidth: 0,
+            },
+          ],
+        };
+
+        const totalEarnedDisplay =
+          document.getElementById('totalEarnedDisplay');
+
+        const earningsChartCanvas = document.getElementById('earningsChart');
+        const earningsChart = new Chart(earningsChartCanvas, {
+          type: 'doughnut',
+          data: earningsData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, // Added to make the chart responsive
+            cutout: '70%', // Adjust the size of the doughnut hole (hole in the middle)
+            plugins: {
+              legend: {
+                display: false, // Hide the legend
+              },
+              afterDraw: function (chart) {
+                // Draw the total earned text inside the doughnut chart
+                const totalEarned = '$4300'; // Replace this with your user's actual total earned value
+                const ctx = chart.ctx;
+                const canvasCenterX =
+                  (chart.canvas.width -
+                    chart.chartArea.left -
+                    chart.chartArea.right) /
+                  2;
+                const canvasCenterY =
+                  (chart.canvas.height -
+                    chart.chartArea.top -
+                    chart.chartArea.bottom) /
+                  2;
+
+                ctx.font = 'bold 16px Arial';
+                ctx.fillStyle = '#333';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(totalEarned, canvasCenterX, canvasCenterY);
+              },
+            },
+          },
+        });
+      });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <% for( let i=0; i < Hours.length; i++ ) { %>
+<a href="/">
 
-    <div class="mt-2 mb-3 ml-2 mr-2 max-w-md bg-white rounded-lg shadow-lg p-6 w-95 sm:w-full">
+
+    <div class="mt-3 mb-3 ml-1 mr-1 max-w-md bg-white rounded-lg p-6 w-95 sm:w-full">
       <!-- Date on Top-Left -->
       <div class="flex justify-between mb-4">
         <!-- Date on Top-Left -->
@@ -31,17 +162,18 @@
       <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
         <div>
           <p class="text-gray-500 text-sm" >Shift Time:</p>
-          <p class="font-bold text-sm"><i class="bi bi-clock-history"></i> <%=Hours[i].ClockIn%> - <%=Hours[i].ClockOut%></p>
+          <p class="font-bold text-sm"><i class="bi bi-clock-history" style="white-space: nowrap;"></i> <%=Hours[i].ClockIn%> - <%=Hours[i].ClockOut%></p>
         </div>
         <div class="text-right">
           <p class="text-gray-500 text-sm">Break Time:</p>
-          <p class="font-bold text-sm"><i class="fa-solid fa-utensils" style="color: #000000;"></i> <%=Hours[i].Startbreak%> - <%=Hours[i].EndBreak%></p>
+          <p class="font-bold text-sm"><i class="fa-solid fa-utensils" style="color: #000000; white-space: nowrap;"></i> <%=Hours[i].Startbreak%> - <%=Hours[i].EndBreak%></p>
         </div>
       </div>
     </div>
+  </a>
 
     <% } %>
 
-   
+  </div>
   </body>
 </html>
