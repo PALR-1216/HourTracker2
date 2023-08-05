@@ -29,7 +29,7 @@
     <!-- if data array is empty show lottie with no footer else show footer and data -->
 <% if (Hours.length >= 1) { %>
 
-  <%if(deviceType === 'desktop') {%>
+  <%if(deviceType === 'desktop' && deviceType ==='tablet' {%>
     <!-- add chart too -->
     <%- include('Containers/HoursContainer', { Hours: Hours}); -%>
 
