@@ -175,12 +175,12 @@
         </div>
         <div class="text-right">
           <p class="text-gray-500 text-sm">Break Time:</p>
-          <%if(Hours[i].Startbreak === 'No Break') {%>
-            <td class="text-center text-lg px-4 py-2" style="white-space: nowrap;"><i class="fa-solid fa-utensils" style="color: #000000;"></i> No Break</td>
+          <%if(Hours[i].Startbreak === "No Break") {%>
+            <p class="font-bold text-sm" style="white-space: nowrap;"><i class="fa-solid fa-utensils" style="color: #000000;"></i> No Break</p>
 
 
             <%}else{%>
-              <td class="text-center text-lg px-4 py-2" style="white-space: nowrap;"><i class="fa-solid fa-utensils" style="color: #000000;"></i> <%=Hours[i].Startbreak%> - <%=Hours[i].EndBreak%></td>
+              <p class="font-bold text-sm" style="white-space: nowrap;"><i class="fa-solid fa-utensils" style="color: #000000;"></i> <%=Hours[i].Startbreak%> - <%=Hours[i].EndBreak%></p>
 
 
             <%}%>
