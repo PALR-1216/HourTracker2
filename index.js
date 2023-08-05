@@ -195,7 +195,13 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     let FirstDate = moment(NextDayPeriod).subtract(14, 'days', true).format("MMM DD")
 
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    conn.commit(insertIntoPayOut)
+    // conn.commit(insertIntoPayOut)
+    conn.query(insertIntoPayOut, (err) =>{
+      if(err) {
+        console.log("error inserting PayOut")
+        throw err;
+      }
+    })
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
     
@@ -205,7 +211,12 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(7, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    conn.commit(insertIntoPayOut)
+    conn.query(insertIntoPayOut, (err) =>{
+      if(err) {
+        console.log("error inserting PayOut")
+        throw err;
+      }
+    })
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
   }
@@ -214,7 +225,12 @@ function CreatePayOutPeriodCheck(Hours, Money, Taxes, DateEnd, NextDayPeriod, Us
     console.log(PaymentType)
     let FirstDate = moment(NextDayPeriod).subtract(30, 'days', true).format("MMM DD")
     let insertIntoPayOut = `insert into PayOuts values ('${nanoid()}', '${UserID}', '${FirstDate}',  '${DateEnd}', ${Money}, ${Hours}, ${Taxes}, '${UserPayOutDate}', ${0})`
-    conn.commit(insertIntoPayOut)
+    conn.query(insertIntoPayOut, (err) =>{
+      if(err) {
+        console.log("error inserting PayOut")
+        throw err;
+      }
+    })
     // console.log(insertIntoPayOut)
     DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd)
 
@@ -242,7 +258,7 @@ function DeleteAllHoursFromPayPeriod(UserID, getNextDayOfPeriodEnd) {
     }
    
 
-    console.log(rows)
+    // console.log(rows)
   })
 
   // UpdateNextPeriodDate(UserID);
@@ -261,7 +277,12 @@ function UpdateNextPeriodDate(ID) {
         let nextDate = moment(Date.add(7,'days', true)).format("MM/DD/YY")
         console.log(nextDate)
         let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
-        conn.commit(commit)
+        conn.query(commit,(err) =>{
+          if(err) {
+            console.log("error in updating date")
+            throw err;
+          }
+        })
         console.log("Weekly")
 
     }
@@ -271,6 +292,12 @@ function UpdateNextPeriodDate(ID) {
         console.log(nextDate)
         let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
         conn.commit(commit)
+        conn.query(commit,(err) =>{
+          if(err) {
+            console.log("error in updating date")
+            throw err;
+          }
+        })
         console.log("Biweekly")
 
     }
@@ -279,7 +306,12 @@ function UpdateNextPeriodDate(ID) {
       let nextDate = moment(Date.add(30,'days', true)).format("MM/DD/YY")
       console.log(nextDate)
       let commit = `update Users set User_EndPeriodDate = '${nextDate}' where User_id ='${ID}'; `
-      conn.commit(commit)
+      conn.query(commit,(err) =>{
+        if(err) {
+          console.log("error in updating date")
+          throw err;
+        }
+      })
       console.log("Monthly")
 
     }
