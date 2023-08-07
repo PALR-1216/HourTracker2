@@ -680,15 +680,17 @@ app.post('/calculateHour', (req, res) => {
         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
         conn.commit(sql);
         // res.redirect('/DataSubmited')
+        res.redirect('/')
         
 
-        res.send(Success);
+        // res.send(Success);
 
       } else {
         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
         conn.commit(sql)
         // res.redirect('/DataSubmited')
-        res.send(Success)
+        // res.send(Success)
+        res.redirect('/')
 
       }
     }
