@@ -793,6 +793,7 @@ app.get('/test', (req,res) =>{
 
 app.post('/testPost', (req,res) =>{
   //implement this to the calculate hours post 
+  
   const startTime = req.body.startTime;
     const endTime = req.body.endTime;
 
@@ -802,9 +803,48 @@ app.post('/testPost', (req,res) =>{
     const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
     const totalHours = totalMinutes / 60;
 
-    if(startHour >= 12 || endHour >= 12) {
-      console.log("is pm")
+    if(endHour < startHour) {
+      res.send("<script>alert('please check your shift time'); window.history.back() </script>")
     }
+
+    if(startHour >= 12) {
+      if(startHour == 12 ) {
+        
+        console.log(`${startHour}:${startMinute} PM`)
+      }
+
+      else {
+        let convertedPM = startHour - 12;
+        
+        console.log(`${convertedPM}:${startMinute} PM`)
+      }
+    }
+
+    else {
+      console.log(`${startHour}:${startMinute} AM`)
+
+    }
+
+    if(endHour >= 12) {
+      if(endHour == 12) {
+        console.log(`${endHour}:${endMinute} PM`)
+
+      }
+
+      else {
+        let convertedPM = endHour - 12;
+        
+        console.log(`${convertedPM}:${endMinute} PM`)
+
+      }
+    }
+
+    else {
+      console.log(`${endHour}:${endMinute} AM`)
+    }
+
+
+
 
     res.send(`Total hours worked: ${totalHours.toFixed(2)} hours`);
 
