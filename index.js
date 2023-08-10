@@ -595,105 +595,110 @@ app.get('/addHour', (req, res) => {
   }
 })
 
+app.post('/calculateHour', (req,res) =>{
+  const options = { hour12: true, hour: 'numeric' };
+  let checkIn = req.body.startTime;
+  let hour1 = checkIn.toLocaleTimeString('en-US', options);
+  res.send(hour1)
+})
 
 
+// app.post('/calculateHour', (req, res) => {
+//   let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
+//   conn.query(user, (err, rows) => {
+//     if (err) { throw err }
+//     let wage = rows[0].User_wage
 
-app.post('/calculateHour', (req, res) => {
-  let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
-  conn.query(user, (err, rows) => {
-    if (err) { throw err }
-    let wage = rows[0].User_wage
+//     // const options = { hour12: true, hour: 'numeric' };
+//     const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
 
-    // const options = { hour12: true, hour: 'numeric' };
-    const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
+//     let checkIn = req.body.startTime;
+//     let clockOut = req.body.endTime
+//     let startOfBreak = req.body.startBreak || null;
+//     let endOfBreak = req.body.endBreak  || null
+//     //call function for timepunch
 
-    let checkIn = new Date(req.body.startTime);
-    let clockOut = new Date(req.body.endTime);
-    let startOfBreak = new Date(req.body.startBreak) || null;
-    let endOfBreak = new Date(req.body.endBreak) || null
-    //call function for timepunch
+//     if (startOfBreak != null && endOfBreak != null) {
 
-    if (startOfBreak != null && endOfBreak != null) {
+//       const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
+//       let totalBreakTime = breakMiliseconds / 36e5;
+//       const milliseconds = Math.abs(clockOut - checkIn);
+//       const hours = milliseconds / 36e5;
 
-      const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
-      let totalBreakTime = breakMiliseconds / 36e5;
-      const milliseconds = Math.abs(clockOut - checkIn);
-      const hours = milliseconds / 36e5;
+//       //get Date of the input
+//       let year = checkIn.getFullYear().toString().slice(-2);
+//       let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
+//       let date = ('0' + checkIn.getDate()).slice(-2);
+//       let AllDate = month + '/' + date + '/' + year;
 
-      //get Date of the input
-      let year = checkIn.getFullYear().toString().slice(-2);
-      let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
-      let date = ('0' + checkIn.getDate()).slice(-2);
-      let AllDate = month + '/' + date + '/' + year;
-
-      let hour1 = checkIn.toLocaleTimeString('en-US', options);
-      let hour2 = clockOut.toLocaleTimeString('en-US', options);
-      let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
-      let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
+//       let hour1 = checkIn.toLocaleTimeString('en-US', options);
+//       let hour2 = clockOut.toLocaleTimeString('en-US', options);
+//       let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
+//       let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
      
-      // res.json({
-      //   start: hour1,
-      //   end: hour2,
-      //   totalHours: hours,
-      //   break:totalBreakTime || "No Break"
-      // })
+//       // res.json({
+//       //   start: hour1,
+//       //   end: hour2,
+//       //   totalHours: hours,
+//       //   break:totalBreakTime || "No Break"
+//       // })
 
-      let Success = `
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+//       let Success = `
+//         <html>
+//         <head>
+//           <meta charset="UTF-8">
+//           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//           <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+//           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-        </head>
+//         </head>
 
-        <body>
+//         <body>
 
-            <div class="container d-flex align-items-center justify-content-center">
+//             <div class="container d-flex align-items-center justify-content-center">
         
-        <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_atippmse.json" background="transparent" speed="1"  style="height: 600px;" autoplay></lottie-player>
+//         <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_atippmse.json" background="transparent" speed="1"  style="height: 600px;" autoplay></lottie-player>
        
-    </div>
+//     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+//     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <script> 
-    setInterval(() =>{
-      window.location = "/"
+//     <script> 
+//     setInterval(() =>{
+//       window.location = "/"
 
-    },2250)
+//     },2250)
         
     
-    </script>
+//     </script>
 
-</body>
+// </body>
 
-        </html>
-        `
-
-
+//         </html>
+//         `
 
 
-      if (break1 === "Invalid Date" || break2 === "Invalid Date") {
-        let totalMoney = hours * wage;
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
-        conn.commit(sql);
-        // res.redirect('/DataSubmited')
+
+
+//       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
+//         let totalMoney = hours * wage;
+//         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
+//         conn.commit(sql);
+//         // res.redirect('/DataSubmited')
         
 
-        res.send(Success);
+//         res.send(Success);
 
-      } else {
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
-        conn.commit(sql)
-        // res.redirect('/DataSubmited')
-        res.send(Success)
+//       } else {
+//         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
+//         conn.commit(sql)
+//         // res.redirect('/DataSubmited')
+//         res.send(Success)
 
-      }
-    }
-  })
-})
+//       }
+//     }
+//   })
+// })
 
 
 // app.get('/DataSubmited', (req,res) =>{
@@ -782,104 +787,28 @@ app.get('/api/:Admin/getusers', (req, res) => {
   
 })
 
-
-//Login via IOS POST
-app.post('/Apilogin', (req, res) => {
-  let userName = req.body.userName
-  let password = req.body.password;
-
-
-  if (!userName) {
-      res.json({
-          Message: "Enter username"
-      })
-
-  } else if (!password) {
-      res.json({
-          Message: "Enter password"
-      })
-
-  } else {
-      //check if user exist
-      let sql = `select * from Users where User_Name='${userName}'`
-      conn.query(sql, async (err, rows) => {
-          if (rows.length == 0) {
-              res.json({
-                  Message: "Error in finding users",
-                  Success: "False"
-              })
-          }
-
-          if (err) {
-              res.json({
-                  Message: "Error in finding users",
-                  Success: "False"
-              })
-          } else {
-
-              try {
-
-                  //hashCompare the password to the one in the database
-                  const passwordIsFound = await bcrypt.compare(password, rows[0].Users_Password)
-                  if (!passwordIsFound) {
-                      //user is not found 
-                      res.json({
-                          Message: "Password does not match the database",
-                          Success: "False"
-                      })
-                      return
-                  } else {
-                      let obj;
-                      let token;
-                      var totalHours;
-                      let totalMoney;
-                      var totalNET;
-                      let wage = rows[0].usersWage;
-                      let deduction = rows[0].usersDeduction
-                      let id = rows[0].userId;
-
-
-                      // let sql = `select * from hours where userId = ${rows[0].userId}`
-                      // let sqlTotalHours = `select Format(SUM(totalHour),2) as SumHours from hours where userId=${id};`;
-                      // conn.query(sqlTotalHours, (err, totalHours) => {
-                      //     totalHours = totalHours[0].SumHours;
-                      //     let totalEarned = totalHours * wage
-                      //     totalNET = totalEarned - (totalEarned * deduction)
-
-
-                          // for (let i in rows) {
-                          //     obj = {
-                          //         Success: "True",
-                          //         TotalHours: totalHours,
-                          //         TotalEarned: totalNET,
-                          //         Token: Jsontoken.sign({
-                          //             userId: rows[0].userId,
-                          //             userName: rows[0].userName
-                          //         }, "userData"),
-                          //         userId: rows[0].userId,
-                          //         userName: rows[0].userName,
-                          //         usersWage: rows[0].usersWage,
-                          //         usersDeduction: rows[0].usersDeduction,
-                          //         userEmail: rows[0].userEmail,
-                          //         usersOvertime: rows[0].usersOvertime,
-                          //         DateAdded: rows[0].DateAdded,
-                          //         userPassword: rows[0].userPassword
-                          //     }
-                          // }
-                          // res.json(obj)
-                          // console.log(obj)
-
-                      // })
-                  }
-
-              } catch (error) {
-                  console.log(error)
-
-              }
-          }
-      })
-  }
+app.get('/test', (req,res) =>{
+  res.render('test')
 })
+
+app.post('/testPost', (req,res) =>{
+  //implement this to the calculate hours post 
+  const startTime = req.body.startTime;
+    const endTime = req.body.endTime;
+
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    const [endHour, endMinute] = endTime.split(':').map(Number);
+
+    const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
+    const totalHours = totalMinutes / 60;
+
+    if(startHour >= 12 || endHour >= 12) {
+      console.log("is pm")
+    }
+
+    res.send(`Total hours worked: ${totalHours.toFixed(2)} hours`);
+
+});
 
 
 
