@@ -844,8 +844,6 @@ app.post('/testPost', (req,res) =>{
     }
 
 
-
-
     res.send(`Total hours worked: ${totalHours.toFixed(2)} hours`);
 
 });
@@ -859,7 +857,7 @@ app.get('*', (req, res) => {
 
 
 
-//function so the server doesent go to sleep
+//function so the DB server doesent go to sleep
 setInterval(function () {
   conn.query('SELECT 1');
 }, 5000);

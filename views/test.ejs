@@ -1,19 +1,292 @@
+
+<%- include("_Navbar")-%>
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Total Hours Worked Calculator</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+
 </head>
 <body>
-    <h1>Total Hours Worked Calculator</h1>
-    <form action="/testPost" method="post">
-        <label for="startTime">Start Time: </label>
-        <input type="time" name="startTime" required>
-        <br>
-        <label for="endTime">End Time: </label>
-        <input type="time" name="endTime" required>
-        <br>
-        <button type="submit">Calculate Total Hours</button>
+
+  <!-- <meta name="viewport" content="width=device-width, user-scalable=no"> -->
+
+
+<!-- <div id="container" class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <lottie-player class="mx-auto h-10 w-auto" src="https://assets8.lottiefiles.com/packages/lf20_ntdmh9RIUC.json"  background="transparent"  speed="1"  style="width: 230px; height: 230px;"  loop  autoplay></lottie-player>
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Add Hour Data</h2>
+  </div>
+
+  <div class="flex justify-center">
+    <form class="space-y-6" action="/CalculateHour" method="POST">
+      <div>
+        <label for="startTime" class="block text-sm font-medium leading-6 text-gray-900">Start of Shift</label>
+        <div class="mt-2">
+          <input id="startTime" name="startTime" type="datetime-local" required class="block w-full rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+    
+
+      <div>
+        <div class="flex items-center justify-between">
+          <label for="endTime" class="block text-sm font-medium leading-6 text-gray-900">End of Shift</label>
+
+        </div>
+        <div class="mt-2">
+          <input id="endTime" name="endTime" type="datetime-local" required class="block w-full rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+
+      <div>
+        <label for="startBreak" class="block text-sm font-medium leading-6 text-gray-900">Start of Break <span class="text-muted">(if Appy)</span></label>
+        <div class="mt-2">
+          <input id="startBreak" name="startBreak" type="datetime-local"  class="block w-full rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+
+      <div>
+        <label for="endBreak" class="block text-sm font-medium leading-6 text-gray-900">End of Break <span class="text-muted">(if Appy)</span></label>
+        <div class="mt-2">
+          <input id="endBreak" name="endBreak" type="datetime-local"  class="block w-full rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>  
+
+      <div>
+        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Data</button>
+      </div>
+
+      
     </form>
-    <p id="result"></p>
+  </div>
+</div> -->
+<!-- <div class="container">
+  <form>
+
+
+
+    <div class="input-group mb-3" style="padding-top: 20px;">
+      <span class="input-group-text" id="addon-wrapping">Clock In</span>
+      <input type="datetime-local" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+      <span class="input-group-text" id="addon-wrapping">Clock Out</span>
+      <input type="datetime-local" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="submit" value="add Break">
+      
+    </div>
+
+  </form>
+
+</div> -->
+
+
+
+
+
+
+ <!-- <form method="post" action="/CalculateHour">
+
+
+        
+
+    
+<div date-rangepicker class="flex items-center">
+
+  
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+      </div>
+      <input required name="startTime" type="datetime-local" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
+    </div>
+    <span class="mx-4 text-gray-500">to</span>
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+      </div>
+      <input required name="endTime" type="datetime-local" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
+  </div>
+  <button type="submit">Add Data</button>
+
+  </div>
+</form>  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time Tracking Form</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <lottie-player
+      class="mx-auto h-10 w-auto"
+      src="https://assets8.lottiefiles.com/packages/lf20_ntdmh9RIUC.json"
+      background="transparent"
+      speed="1"
+      style="width: 230px; height: 230px"
+      loop
+      autoplay
+    ></lottie-player>
+
+    <div class="max-w-md mx-auto mb-5 mt-8 p-6 bg-white rounded shadow">
+      <h2 class="text-2xl font-semibold mb-4">Time Tracking</h2>
+      <form action="/testPost" method="POST">
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2">Clock In</label>
+          <input
+            type="time"
+            class="
+              w-full
+              px-3
+              py-2
+              border
+              rounded-lg
+              focus:ring focus:ring-blue-200
+            "
+            required
+            name="startTime"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2"
+            >Clock Out</label
+          >
+          <input
+            type="time"
+            class="
+              w-full
+              px-3
+              py-2
+              border
+              rounded-lg
+              focus:ring focus:ring-blue-200
+            "
+            required
+             name="endTime"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2">Breaks</label>
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="breakCheckbox" class="text-blue-500" />
+            <label for="breakCheckbox" class="text-gray-700">Add Break</label>
+          </div>
+          <div id="breakFields" class="mt-2 hidden">
+            <label class="block text-gray-700 font-semibold mb-2"
+              >Start Break</label
+            >
+            <input
+              type="time"
+              class="
+                w-full
+                px-3
+                py-2
+                border
+                rounded-lg
+                focus:ring focus:ring-blue-200
+              "
+              
+              name="startBreak"
+            />
+            <label class="block text-gray-700 font-semibold mt-2 mb-2"
+              >End Break</label
+            >
+            <input
+              type="time"
+              class="
+                w-full
+                px-3
+                py-2
+                border
+                rounded-lg
+                focus:ring focus:ring-blue-200
+              "
+              
+              name="endBreak"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="
+            bg-blue-500
+            hover:bg-blue-600
+            text-white
+            font-semibold
+            py-2
+            px-4
+            rounded
+            focus:outline-none focus:ring focus:ring-blue-200
+          "
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const breakCheckbox = document.getElementById('breakCheckbox');
+      const breakFields = document.getElementById('breakFields');
+
+      breakCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+          breakFields.classList.remove('hidden');
+        } else {
+          breakFields.classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>
+
+
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+
+
+
+<style>
+
+
+@media only screen and (max-width: 600px) {
+  body {
+
+  }
+
+  /* input[type="datetime-local"] {
+    width: 380px;
+  }
+ */
+
+ 
+
+}
+
+</style>
 </body>
 </html>
+
+
+
+<%- include("_Footer")-%>
