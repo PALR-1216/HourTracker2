@@ -809,9 +809,52 @@ app.post('/testPost', (req,res) =>{
     const totalHours = totalMinutes / 60;
     const totalBreakHours = totalBreakMinutes / 60;
     
+    if(endHour < startHour) {
+      res.send("<script>alert('please check your shift time'); window.history.back() </script>")
+    }
+
+    if(endBreak < startBreak) {
+      res.send("<script>alert('please check your break time'); window.history.back() </script>")
+
+    }
 
     if(totalBreakHours) {
       res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${totalBreakHours.toFixed(2)} hours`);
+
+      if(startBreak >= 12) {
+        if(startBreak == 12) {
+          console.log(`${startBreak}:${startBreakMinutes} PM break`)
+
+        }
+        else {
+          let convertedBreak = startBreak - 12;
+          console.log(`${convertedBreak}:${startBreakMinutes} PM`)
+
+        }
+
+      }
+      else {
+        console.log(`${startBreak}:${startBreakMinutes} AM`)
+
+      }
+
+      if(endBreak >= 12) {
+        if(endBreak == 12) {
+          console.log(`${endBreak}:${endBreakMinutes} PM`)
+
+        }
+
+        else {
+          let convertedBreak = endBreak - 12;
+          console.log(`${convertedBreak}:${endBreakMinutes} PM break`)
+
+        }
+      }
+
+      else {
+        console.log(`${endBreak}:${endBreakMinutes} AM `)
+
+      }
      
     }
 
@@ -821,9 +864,7 @@ app.post('/testPost', (req,res) =>{
     }
 
 
-    if(endHour < startHour) {
-      res.send("<script>alert('please check your shift time'); window.history.back() </script>")
-    }
+   
 
     if(startHour >= 12) {
       if(startHour == 12 ) {
