@@ -794,14 +794,32 @@ app.get('/test', (req,res) =>{
 app.post('/testPost', (req,res) =>{
   //implement this to the calculate hours post 
   
-  const startTime = req.body.startTime;
+    const startTime = req.body.startTime;
     const endTime = req.body.endTime;
+    const StartBreak = req.body.startBreak;
+    const EndBreak = req.body.endBreak;
 
     const [startHour, startMinute] = startTime.split(':').map(Number);
     const [endHour, endMinute] = endTime.split(':').map(Number);
+    const [startBreak, startBreakMinutes] = StartBreak.split(':').map(Number)
+    const [endBreak, endBreakMinutes] = EndBreak.split(':').map(Number)
 
+    const totalBreakMinutes = (endBreak - startBreak) * 60 + (endBreakMinutes - startBreakMinutes);
     const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
     const totalHours = totalMinutes / 60;
+    const totalBreakHours = totalBreakMinutes / 60;
+    
+
+    if(totalBreakHours) {
+      res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${totalBreakHours.toFixed(2)} hours`);
+     
+    }
+
+    else {
+      res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${0} hours`);
+
+    }
+
 
     if(endHour < startHour) {
       res.send("<script>alert('please check your shift time'); window.history.back() </script>")
