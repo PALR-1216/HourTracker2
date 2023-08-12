@@ -99,7 +99,8 @@ app.use(session({
 
 }))
 
-
+//*/5 * * * * *
+//0 0 * * *
 
 cron.schedule("0 0 * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
@@ -115,7 +116,7 @@ cron.schedule("0 0 * * *", () =>{
         let ID = rows[i].User_id;
         let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
         let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
-        // console.log(getNextDayOfPeriodEnd)
+        console.log(getNextDayOfPeriodEnd)
         let currentDate = moment().format("MM/DD/YYYY")
 
         if(getNextDayOfPeriodEnd === currentDate) {
@@ -125,7 +126,7 @@ cron.schedule("0 0 * * *", () =>{
         }
 
         else {
-          // console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
+          console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
         } 
         }
       }
