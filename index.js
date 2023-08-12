@@ -595,115 +595,110 @@ app.get('/addHour', (req, res) => {
   }
 })
 
-app.post('/calculateHour', (req,res) =>{
-  const options = { hour12: true, hour: 'numeric' };
-  let checkIn = req.body.startTime;
-  let hour1 = checkIn.toLocaleTimeString('en-US', options);
-  res.send(hour1)
+
+
+
+app.post('/calculateHour', (req, res) => {
+  let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
+  conn.query(user, (err, rows) => {
+    if (err) { throw err }
+    let wage = rows[0].User_wage
+
+    // const options = { hour12: true, hour: 'numeric' };
+    const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
+
+    let checkIn = req.body.startTime;
+    let clockOut = req.body.endTime
+    let startOfBreak = req.body.startBreak || null;
+    let endOfBreak = req.body.endBreak  || null
+    //call function for timepunch
+
+    if (startOfBreak != null && endOfBreak != null) {
+
+      const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
+      let totalBreakTime = breakMiliseconds / 36e5;
+      const milliseconds = Math.abs(clockOut - checkIn);
+      const hours = milliseconds / 36e5;
+
+      //get Date of the input
+      let year = checkIn.getFullYear().toString().slice(-2);
+      let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
+      let date = ('0' + checkIn.getDate()).slice(-2);
+      let AllDate = month + '/' + date + '/' + year;
+
+      let hour1 = checkIn.toLocaleTimeString('en-US', options);
+      let hour2 = clockOut.toLocaleTimeString('en-US', options);
+      let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
+      let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
+     
+      // res.json({
+      //   start: hour1,
+      //   end: hour2,
+      //   totalHours: hours,
+      //   break:totalBreakTime || "No Break"
+      // })
+
+      let Success = `
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        </head>
+
+        <body>
+
+            <div class="container d-flex align-items-center justify-content-center">
+        
+        <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_atippmse.json" background="transparent" speed="1"  style="height: 600px;" autoplay></lottie-player>
+       
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script> 
+    setInterval(() =>{
+      window.location = "/"
+
+    },2250)
+        
+    
+    </script>
+
+</body>
+
+        </html>
+        `
+
+
+
+
+      if (break1 === "Invalid Date" || break2 === "Invalid Date") {
+        let totalMoney = hours * wage;
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
+        conn.commit(sql);
+        // res.redirect('/DataSubmited')
+        
+
+        res.send(Success);
+
+      } else {
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
+        conn.commit(sql)
+        // res.redirect('/DataSubmited')
+        res.send(Success)
+
+      }
+    }
+  })
 })
 
 
-// app.post('/calculateHour', (req, res) => {
-//   let user = `select User_wage from Users where User_id = '${req.cookies.user_id}';`;
-//   conn.query(user, (err, rows) => {
-//     if (err) { throw err }
-//     let wage = rows[0].User_wage
-
-//     // const options = { hour12: true, hour: 'numeric' };
-//     const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
-
-//     let checkIn = req.body.startTime;
-//     let clockOut = req.body.endTime
-//     let startOfBreak = req.body.startBreak || null;
-//     let endOfBreak = req.body.endBreak  || null
-//     //call function for timepunch
-
-//     if (startOfBreak != null && endOfBreak != null) {
-
-//       const breakMiliseconds = Math.abs(endOfBreak - startOfBreak);
-//       let totalBreakTime = breakMiliseconds / 36e5;
-//       const milliseconds = Math.abs(clockOut - checkIn);
-//       const hours = milliseconds / 36e5;
-
-//       //get Date of the input
-//       let year = checkIn.getFullYear().toString().slice(-2);
-//       let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
-//       let date = ('0' + checkIn.getDate()).slice(-2);
-//       let AllDate = month + '/' + date + '/' + year;
-
-//       let hour1 = checkIn.toLocaleTimeString('en-US', options);
-//       let hour2 = clockOut.toLocaleTimeString('en-US', options);
-//       let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
-//       let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
-     
-//       // res.json({
-//       //   start: hour1,
-//       //   end: hour2,
-//       //   totalHours: hours,
-//       //   break:totalBreakTime || "No Break"
-//       // })
-
-//       let Success = `
-//         <html>
-//         <head>
-//           <meta charset="UTF-8">
-//           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//           <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-//           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-//         </head>
-
-//         <body>
-
-//             <div class="container d-flex align-items-center justify-content-center">
-        
-//         <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_atippmse.json" background="transparent" speed="1"  style="height: 600px;" autoplay></lottie-player>
-       
-//     </div>
-
-//     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-//     <script> 
-//     setInterval(() =>{
-//       window.location = "/"
-
-//     },2250)
-        
-    
-//     </script>
-
-// </body>
-
-//         </html>
-//         `
-
-
-
-
-//       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
-//         let totalMoney = hours * wage;
-//         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
-//         conn.commit(sql);
-//         // res.redirect('/DataSubmited')
-        
-
-//         res.send(Success);
-
-//       } else {
-//         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
-//         conn.commit(sql)
-//         // res.redirect('/DataSubmited')
-//         res.send(Success)
-
-//       }
-//     }
-//   })
-// })
-
-
-// app.get('/DataSubmited', (req,res) =>{
-//   res.render("PopUps/DataAdded");
-// })
+app.get('/DataSubmited', (req,res) =>{
+  res.render("PopUps/DataAdded");
+})
 
 
 
@@ -791,121 +786,146 @@ app.get('/test', (req,res) =>{
   res.render('test')
 })
 
-app.post('/testPost', (req,res) =>{
-  //implement this to the calculate hours post 
+// app.post('/testPost', (req,res) =>{
+//   let clockin;
+//   let clockout;
+//   let startbreak;
+//   let endbreak;
+
+//   //implement this to the calculate hours post 
   
-    const startTime = req.body.startTime;
-    const endTime = req.body.endTime;
-    const StartBreak = req.body.startBreak;
-    const EndBreak = req.body.endBreak;
+//     const startTime = req.body.startTime;
+//     const endTime = req.body.endTime;
+//     const StartBreak = req.body.startBreak;
+//     const EndBreak = req.body.endBreak;
 
-    const [startHour, startMinute] = startTime.split(':').map(Number);
-    const [endHour, endMinute] = endTime.split(':').map(Number);
-    const [startBreak, startBreakMinutes] = StartBreak.split(':').map(Number)
-    const [endBreak, endBreakMinutes] = EndBreak.split(':').map(Number)
+//     const [startHour, startMinute] = startTime.split(':').map(Number);
+//     console.log(startHour)
+//     const [endHour, endMinute] = endTime.split(':').map(Number);
+//     const [startBreak, startBreakMinutes] = StartBreak.split(':').map(Number)
+//     const [endBreak, endBreakMinutes] = EndBreak.split(':').map(Number)
 
-    const totalBreakMinutes = (endBreak - startBreak) * 60 + (endBreakMinutes - startBreakMinutes);
-    const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-    const totalHours = totalMinutes / 60;
-    const totalBreakHours = totalBreakMinutes / 60;
+//     const totalBreakMinutes = (endBreak - startBreak) * 60 + (endBreakMinutes - startBreakMinutes);
+//     const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
+//     const totalHours = totalMinutes / 60;
+//     const totalBreakHours = totalBreakMinutes / 60;
     
-    if(endHour < startHour) {
-      res.send("<script>alert('please check your shift time'); window.history.back() </script>")
-    }
+//     if(endHour < startHour) {
+//       res.send("<script>alert('please check your shift time'); window.history.back() </script>")
+//     }
 
-    if(endBreak < startBreak) {
-      res.send("<script>alert('please check your break time'); window.history.back() </script>")
+//     if(endBreak < startBreak) {
+//       res.send("<script>alert('please check your break time'); window.history.back() </script>")
 
-    }
+//     }
 
-    if(totalBreakHours) {
-      res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${totalBreakHours.toFixed(2)} hours`);
+//     if(totalBreakHours) {
+//       // res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${totalBreakHours.toFixed(2)} hours`);
 
-      if(startBreak >= 12) {
-        if(startBreak == 12) {
-          console.log(`${startBreak}:${startBreakMinutes} PM break`)
+//       if(startBreak >= 12) {
+//         if(startBreak === 12) {
+//           console.log(`${startBreak}:${startBreakMinutes} PM break`)
 
-        }
-        else {
-          let convertedBreak = startBreak - 12;
-          console.log(`${convertedBreak}:${startBreakMinutes} PM`)
 
-        }
 
-      }
-      else {
-        console.log(`${startBreak}:${startBreakMinutes} AM`)
+//         }
+//         else {
+//           let convertedBreak = startBreak - 12;
+//           console.log(`${convertedBreak}:${startBreakMinutes} PM`)
 
-      }
+//         }
 
-      if(endBreak >= 12) {
-        if(endBreak == 12) {
-          console.log(`${endBreak}:${endBreakMinutes} PM`)
+//       }
+//       else {
+//         console.log(`${startBreak}:${startBreakMinutes} AM`)
 
-        }
+//       }
 
-        else {
-          let convertedBreak = endBreak - 12;
-          console.log(`${convertedBreak}:${endBreakMinutes} PM break`)
+//       if(endBreak > 12) {
+//         if(endBreak === 12) {
+//           console.log(`${endBreak}:${endBreakMinutes} PM`)
 
-        }
-      }
+//         }
 
-      else {
-        console.log(`${endBreak}:${endBreakMinutes} AM `)
+//         else {
+//           let convertedBreak = endBreak - 12;
+//           console.log(`${convertedBreak}:${endBreakMinutes} PM break`)
 
-      }
+//         }
+//       }
+
+//       else {
+//         console.log(`${endBreak}:${endBreakMinutes} AM `)
+
+//       }
      
-    }
+//     }
 
-    else {
-      res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${0} hours`);
+//     else {
+//       // res.send(`Total hours worked: ${totalHours.toFixed(2)} hours : Total Break : ${0} hours`);
 
-    }
+//     }
 
 
    
 
-    if(startHour >= 12) {
-      if(startHour == 12 ) {
+//     if(startHour > 12) {
+//       if(startHour === 0 ) {
         
-        console.log(`${startHour}:${startMinute} PM`)
-      }
+//         // console.log(`${startHour}:${startMinute} PM`)
+//         clockin = `${12}:${startMinute < 10 ? '0' : ''}${startMinute} PM`;
+    
+//       }
 
-      else {
-        let convertedPM = startHour - 12;
+//       else {
+//         let convertedPM = startHour - 12;
         
-        console.log(`${convertedPM}:${startMinute} PM`)
-      }
-    }
+//         // console.log(`${convertedPM}:${startMinute} PM`)
+//         clockin = `${convertedPM}:${startMinute < 10 ? '0' : ''}${startMinute} PM`;
 
-    else {
-      console.log(`${startHour}:${startMinute} AM`)
 
-    }
+//       }
+//     }
 
-    if(endHour >= 12) {
-      if(endHour == 12) {
-        console.log(`${endHour}:${endMinute} PM`)
+//     else {
+//       // console.log(`${startHour}:${startMinute} AM`)
+//       clockin = `${startHour}:${startMinute < 10 ? '0' : ''}${startMinute} AM`;
 
-      }
+      
 
-      else {
-        let convertedPM = endHour - 12;
+//     }
+
+//     if(endHour > 12) {
+//       if(endHour === 0) {
+//         // console.log(`${endHour}:${endMinute} PM`)
+//         clockout = `${12}:${endMinute < 10 ? '0' : ''}${endMinute} PM`;
+
+
+//       }
+
+//       else {
+//         let convertedPM = endHour - 12;
         
-        console.log(`${convertedPM}:${endMinute} PM`)
+//         // console.log(`${convertedPM}:${endMinute} PM`)
+//         clockout = `${convertedPM}:${endMinute < 10 ? '0' : ''}${endMinute} PM`;
 
-      }
-    }
+        
 
-    else {
-      console.log(`${endHour}:${endMinute} AM`)
-    }
+//       }
+//     }
+
+//     else {
+//       // console.log(`${endHour}:${endMinute} AM`)
+//       clockout = `${endHour}:${endMinute < 10 ? '0' : ''}${endMinute} AM`;
+      
+//     }
 
 
-    res.send(`Total hours worked: ${totalHours.toFixed(2)} hours`);
+//     res.send(`Total hours worked: ${totalHours.toFixed(2)} hours`);
+//     console.log(`clock in : ${clockin}`)
+//     console.log(`Clock out : ${clockout}`)
 
-});
+// });
 
 
 
