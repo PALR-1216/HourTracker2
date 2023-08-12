@@ -19,7 +19,7 @@
   <!-- <meta name="viewport" content="width=device-width, user-scalable=no"> -->
 
 
-<div id="container" class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+<!-- <div id="container" class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <lottie-player class="mx-auto h-10 w-auto" src="https://assets8.lottiefiles.com/packages/lf20_ntdmh9RIUC.json"  background="transparent"  speed="1"  style="width: 230px; height: 230px;"  loop  autoplay></lottie-player>
     <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Add Hour Data</h2>
@@ -66,7 +66,7 @@
       
     </form>
   </div>
-</div>
+</div> -->
 <!-- <div class="container">
   <form>
 
@@ -123,6 +123,139 @@
 
 
 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time Tracking Form</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <lottie-player
+      class="mx-auto h-10 w-auto"
+      src="https://assets8.lottiefiles.com/packages/lf20_ntdmh9RIUC.json"
+      background="transparent"
+      speed="1"
+      style="width: 230px; height: 230px"
+      loop
+      autoplay
+    ></lottie-player>
+
+    <div class="max-w-md mx-auto mb-5 mt-8 p-6 bg-white rounded shadow">
+      <h2 class="text-2xl font-semibold mb-4">Time Tracking</h2>
+      <form action="/CalculateHour" method="POST">
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2">Clock In</label>
+          <input
+            type="datetime-local"
+            class="
+              w-full
+              px-3
+              py-2
+              border
+              rounded-lg
+              focus:ring focus:ring-blue-200
+            "
+            required
+            name="startTime"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2"
+            >Clock Out</label
+          >
+          <input
+            type="datetime-local"
+            class="
+              w-full
+              px-3
+              py-2
+              border
+              rounded-lg
+              focus:ring focus:ring-blue-200
+            "
+            required
+             name="endTime"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-2">Breaks</label>
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="breakCheckbox" class="text-blue-500" />
+            <label for="breakCheckbox" class="text-gray-700">Add Break</label>
+          </div>
+          <div id="breakFields" class="mt-2 hidden">
+            <label class="block text-gray-700 font-semibold mb-2"
+              >Start Break</label
+            >
+            <input
+              type="datetime-local"
+              class="
+                w-full
+                px-3
+                py-2
+                border
+                rounded-lg
+                focus:ring focus:ring-blue-200
+              "
+              
+              name="startBreak"
+            />
+            <label class="block text-gray-700 font-semibold mt-2 mb-2"
+              >End Break</label
+            >
+            <input
+              type="datetime-local"
+              class="
+                w-full
+                px-3
+                py-2
+                border
+                rounded-lg
+                focus:ring focus:ring-blue-200
+              "
+              
+              name="endBreak"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="
+            bg-blue-500
+            hover:bg-blue-600
+            text-white
+            font-semibold
+            py-2
+            px-4
+            rounded
+            focus:outline-none focus:ring focus:ring-blue-200
+          "
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const breakCheckbox = document.getElementById('breakCheckbox');
+      const breakFields = document.getElementById('breakFields');
+
+      breakCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+          breakFields.classList.remove('hidden');
+        } else {
+          breakFields.classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>
 
 
   
