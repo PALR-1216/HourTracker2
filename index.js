@@ -610,6 +610,7 @@ app.post('/calculateHour', (req, res) => {
 
     // const options = { hour12: true, hour: 'numeric' };
     const options = { hour12: true, hour: '2-digit', minute: '2-digit' };
+    
 
     let checkIn = new Date(req.body.startTime);
     let clockOut = new Date(req.body.endTime);
@@ -629,56 +630,24 @@ app.post('/calculateHour', (req, res) => {
       let month = ('0' + (checkIn.getMonth() + 1)).slice(-2);
       let date = ('0' + checkIn.getDate()).slice(-2);
       let AllDate = month + '/' + date + '/' + year;
+      
 
       let hour1 = checkIn.toLocaleTimeString('en-US', options);
       let hour2 = clockOut.toLocaleTimeString('en-US', options);
       let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
       let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
-     
-      // res.json({
-      //   start: hour1,
-      //   end: hour2,
-      //   totalHours: hours,
-      //   break:totalBreakTime || "No Break"
-      // })
+      
+      if(hour1 === hour2) {
+        res.send("<script>alert('Your shift cant be the same time'); window.history.back() </script>")
+      }
 
-      let Success = `
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-        </head>
-
-        <body>
-
-            <div class="container d-flex align-items-center justify-content-center">
-        
-        <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_atippmse.json" background="transparent" speed="1"  style="height: 600px;" autoplay></lottie-player>
-       
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-    <script> 
-    setInterval(() =>{
-      window.location = "/"
-
-    },2250)
-        
-    
-    </script>
-
-</body>
-
-        </html>
-        `
+      if(break1 === break2) {
+        res.send("<script>alert('Your Lunch break cant be the same time'); window.history.back() </script>")
 
 
+      }
 
-
+      
       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
         let totalMoney = hours * wage;
         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
@@ -690,7 +659,7 @@ app.post('/calculateHour', (req, res) => {
         // res.send(Success);
 
       } else {
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${(hours - totalBreakTime).toFixed(2)}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours - totalBreakTime}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
         conn.commit(sql)
         // res.redirect('/DataSubmited')
         // res.send(Success)
@@ -698,6 +667,7 @@ app.post('/calculateHour', (req, res) => {
 
       }
     }
+
   })
 })
 
