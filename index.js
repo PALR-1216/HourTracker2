@@ -102,36 +102,39 @@ app.use(session({
 //*/5 * * * * *
 //0 0 * * *
 
-cron.schedule("0 0 * * *", () =>{
-  let selectUser = `select User_id, User_EndPeriodDate from Users`;
+// cron.schedule("0 0 * * *", () =>{
+//   let selectUser = `select User_id, User_EndPeriodDate from Users`;
 
-  conn.query(selectUser, (err,rows) =>{
+//   conn.query(selectUser, (err,rows) =>{
 
-    if(rows.length != 0) {
+//     if(rows.length != 0) {
 
 
-      if(err) throw err;
+//       if(err) {
+//         throw err
+//       };
 
-      for(let i in rows) {
-        let ID = rows[i].User_id;
-        let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
-        let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
-        console.log(getNextDayOfPeriodEnd)
-        let currentDate = moment().format("MM/DD/YYYY")
 
-        if(getNextDayOfPeriodEnd === currentDate) {
-          getTotalEarned(ID, User_EndPeriodDate, getNextDayOfPeriodEnd)
+//       for(let i in rows) {
+//         let ID = rows[i].User_id;
+//         let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
+//         let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
+//         console.log(getNextDayOfPeriodEnd)
+//         let currentDate = moment().format("MM/DD/YYYY")
+
+//         if(getNextDayOfPeriodEnd === currentDate) {
+//           getTotalEarned(ID, User_EndPeriodDate, getNextDayOfPeriodEnd)
           
 
-        }
+//         }
 
-        else {
-          console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
-        } 
-        }
-      }
-  })
-})
+//         else {
+//           console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
+//         } 
+//         }
+//       }
+//   })
+// })
 
 
 
@@ -687,7 +690,7 @@ app.post('/calculateHour', (req, res) => {
         // res.send(Success);
 
       } else {
-        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
+        let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours - totalBreakTime}, '${break1}', '${break2}', ${totalBreakTime}, ${(hours - totalBreakTime).toFixed(2) * wage}, '${AllDate}')`
         conn.commit(sql)
         // res.redirect('/DataSubmited')
         // res.send(Success)
