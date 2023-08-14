@@ -102,6 +102,7 @@ app.use(session({
 app.get('/test', async (req, res) => {
   console.log("hello")
   // return res.send('ok')
+  //it works need to make the my checkMaker bot inside here
 })  
 
 //*/5 * * * * *
