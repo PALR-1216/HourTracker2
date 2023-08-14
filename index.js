@@ -650,6 +650,17 @@ app.post('/calculateHour', (req, res) => {
       
       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
         let totalMoney = hours * wage;
+        if (hour1.includes("AM") && hour2.includes("PM")) {
+          //check hour
+        }
+
+        else if (hour1.includes("AM") && hour2.includes("AM")) {
+
+        }
+
+        else if(hour1.includes("PM") && hour2.includes("PM")) {
+          
+        }
         let sql = `insert into Hours values ('${nanoid()}', '${req.cookies.user_id}', '${hour1}', '${hour2}', ${hours}, ${null}, ${null}, ${null}, ${hours * wage}, '${AllDate}')`
         conn.commit(sql);
         // res.redirect('/DataSubmited')
