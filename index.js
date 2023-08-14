@@ -99,6 +99,10 @@ app.use(session({
 
 }))
 
+app.get('test', (req,res) =>{
+  console.log("cron job runned ")
+})
+
 //*/5 * * * * *
 //0 0 * * *
 
