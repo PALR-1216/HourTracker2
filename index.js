@@ -100,8 +100,8 @@ app.use(session({
 }))
 
 app.get('/test', async (req, res) => {
-  await db.write(req.body)
-  return res.send('ok')
+  console.log("hello")
+  // return res.send('ok')
 })  
 
 //*/5 * * * * *
