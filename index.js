@@ -99,9 +99,10 @@ app.use(session({
 
 }))
 
-app.get('test', (req,res) =>{
-  console.log("cron job runned ")
-})
+app.get('/test', async (req, res) => {
+  await db.write(req.body)
+  return res.send('ok')
+})  
 
 //*/5 * * * * *
 //0 0 * * *
