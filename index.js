@@ -100,7 +100,7 @@ app.use(session({
 }))
 
 app.get('/checkUserPayOut', async (req, res) => {
-  await getUserInfo(req.cookies.user_id);
+  await getUserInfo(req.cookies.user_id );
   // return res.send('ok')
   //it works need to make the my checkMaker bot inside here
 })  
