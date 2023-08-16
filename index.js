@@ -100,12 +100,7 @@ app.use(session({
 }))
 
 app.get('/checkUserPayOut', async (req, res) => {
-  // await getUserInfo(req.cookies.user_id);
-
-  conn.query(`select * from Users;`, (err, rows) => {
-    if (err) { throw err; }
-    console.log(rows);
-  })
+  await getUserInfo(req.cookies.user_id);
   // return res.send('ok')
   //it works need to make the my checkMaker bot inside here
 })  
