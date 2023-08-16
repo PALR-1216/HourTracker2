@@ -113,7 +113,7 @@ app.get('/checkUserPayOut', async (req, res) => {
       let usersDate = moment(users[i].User_EndPeriodDate)
       let userID = users[i].User_id;
       let userNextDate = moment(usersDate).add(1,'day', true);
-      let diff = userNextDate.diff(currentDate)
+      let diff = currentDate.diff(userNextDate)
       console.log(diff)
 
       // console.log(`user - ${userID} date - ${userNextDate}`)
