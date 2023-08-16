@@ -131,7 +131,21 @@ app.get('/checkUserPayOut', async (req, res) => {
 async function GetUserHours(userNextDate, User_id) {
   let selectHours = `select * from Hours where UserID = '${User_id}'`;
   conn.query(selectHours, async(err,hours) =>{
-    console.log(hours)
+    let GetUserDeductions = `select User_deduction from Users where User_id = '${User_id}';`
+    conn.query(GetUserDeductions, async(err,deduction) =>{
+      if(err) {
+        throw err;
+      }
+      let setAllAmounts = `select SUM(TotalHours) as TotalHours, SUM(TotalEarned) as TotalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as Totaltax from Hours`
+      conn.query(setAllAmounts, async(err,Totals) =>{
+        console.log(Totals)
+
+      })
+
+
+
+    })
+
 
   })
 
@@ -139,6 +153,34 @@ async function GetUserHours(userNextDate, User_id) {
 
 //*/5 * * * * *
 //0 0 * * *
+
+cron.schedule("/*/5 * * * * *", () =>{
+
+  // await getUserInfo(req.cookies.user_id );
+  // return res.send('ok')
+  //it works need to make the my checkMaker bot inside here
+  let selectUser = `select User_id, User_EndPeriodDate from Users`;
+   conn.query(selectUser, async (err,users) =>{
+
+    if(err) {throw err}
+    for(let i in users) {
+      let currentDate = moment();
+      let usersDate = moment(users[i].User_EndPeriodDate)
+      let userID = users[i].User_id;
+      let userNextDate = moment(usersDate).add(1,'day', true);
+      let diff = currentDate.diff(userNextDate, 'days')
+      console.log(diff)
+
+      // console.log(`user - ${userID} date - ${userNextDate}`)
+      if(diff == 0 ) {
+        await GetUserHours(userNextDate, userID)     
+      }
+
+    }
+
+  })
+
+})
 
 cron.schedule("0 0 * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
