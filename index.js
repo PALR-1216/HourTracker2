@@ -113,7 +113,10 @@ app.get('/checkUserPayOut', async (req, res) => {
       let usersDate = moment(users[i].User_EndPeriodDate)
       let userID = users[i].User_id;
       let userNextDate = moment(usersDate).add(1,'day', true);
-      console.log(`user - ${userID} date - ${userNextDate}`)
+      let diff = userNextDate.diff(currentDate)
+      console.log(diff)
+
+      // console.log(`user - ${userID} date - ${userNextDate}`)
       if(currentDate == userNextDate) {
 
         // await GetUserHours(userNextDate, User_id)
