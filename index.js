@@ -114,10 +114,8 @@ app.get('/checkUserPayOut', async (req, res) => {
       let userID = users[i].User_id;
       let userNextDate = moment(usersDate).add(1,'day', true);
       if(userNextDate === currentDate) {
-        console.log(currentDate)
-        console.log(userNextDate)
 
-        // await GetUserHours(userNextDate, User_id)
+        await GetUserHours(userNextDate, User_id)
       }
 
     }
@@ -673,15 +671,15 @@ app.post('/calculateHour', (req, res) => {
       let break1 = startOfBreak.toLocaleTimeString('en-US', options) || null
       let break2 = endOfBreak.toLocaleTimeString('en-US', options) || null
       
-      if(hour1 === hour2) {
-        res.send("<script>alert('Your shift cant be the same time'); window.history.back() </script>")
-      }
+      // if(hour1 === hour2) {
+      //   res.send("<script>alert('Your shift cant be the same time'); window.history.back() </script>")
+      // }
 
-      if(break1 === break2) {
-        res.send("<script>alert('Your Lunch break cant be the same time'); window.history.back() </script>")
+      // if(break1 === break2) {
+      //   res.send("<script>alert('Your Lunch break cant be the same time'); window.history.back() </script>")
 
 
-      }
+      // }
 
       
       if (break1 === "Invalid Date" || break2 === "Invalid Date") {
