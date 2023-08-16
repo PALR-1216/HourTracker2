@@ -106,8 +106,13 @@ app.get('/checkUserPayOut', async (req, res) => {
   //it works need to make the my checkMaker bot inside here
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
    conn.query(selectUser, (err,users) =>{
+
     if(err) {throw err}
-    console.log(users)
+    for(let i in users) {
+      let usersDate = moment(users[i].User_EndPeriodDate)
+      console.log(usersDate)
+
+    }
 
   })
 
