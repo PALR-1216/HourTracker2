@@ -107,7 +107,7 @@ app.get('/checkUserPayOut', async (req, res) => {
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
    conn.query(selectUser, (err,users) =>{
     if(err) {throw err}
-    console.log(rows)
+    console.log(users)
 
   })
 
