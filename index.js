@@ -110,7 +110,8 @@ app.get('/checkUserPayOut', async (req, res) => {
     if(err) {throw err}
     for(let i in users) {
       let usersDate = moment(users[i].User_EndPeriodDate)
-      console.log(usersDate)
+      let userNextDate = moment(usersDate).add(1,'day');
+      console.log(userNextDate);
 
     }
 
