@@ -105,13 +105,17 @@ app.get('/checkUserPayOut', async (req, res) => {
   // return res.send('ok')
   //it works need to make the my checkMaker bot inside here
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
-   conn.query(selectUser, (err,users) =>{
+   conn.query(selectUser, async (err,users) =>{
 
     if(err) {throw err}
     for(let i in users) {
+      let currentDate = moment();
       let usersDate = moment(users[i].User_EndPeriodDate)
+      let userID = users[i].User_id;
       let userNextDate = moment(usersDate).add(1,'day');
-      console.log(userNextDate);
+      if(userNextDate === currentDate) {
+        await GetUserHours(userNextDate, User_id)
+      }
 
     }
 
@@ -119,12 +123,11 @@ app.get('/checkUserPayOut', async (req, res) => {
 
 })  
 
-async function getUserInfo(ID) {
-  console.log(ID)
-  let sql = `select * from Users where User_id = '${ID}'`
-  conn.query(sql, (err,rows) =>{
-    if(err) throw err
-    console.log(rows)
+async function GetUserHours(userNextDate, User_id) {
+  let selectHours = `select * from Hours where UserID = '${User_id}'`;
+  conn.query(selectHours, async(err,hours) =>{
+    console.log(hours)
+
   })
 
 }
