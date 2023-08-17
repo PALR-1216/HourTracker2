@@ -128,6 +128,12 @@ app.get('/checkUserPayOut', async (req, res) => {
 
 })  
 
+async function CreateUserPayOut(User_id, Totals) {
+  
+  
+ 
+}
+
 async function GetUserHours(userNextDate, User_id) {
   let selectHours = `select * from Hours where UserID = '${User_id}'`;
   conn.query(selectHours, async(err,hours) =>{
@@ -138,7 +144,19 @@ async function GetUserHours(userNextDate, User_id) {
       }
       let setAllAmounts = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as TotalTaxes from Hours where UserID = '${User_id}'`
       conn.query(setAllAmounts, async(err,Totals) =>{
-        console.log(Totals)
+        let arr = []
+        // console.log(Totals)
+        for (let  i in Totals) { 
+          let obj = {
+            Total:Totals[i].Total,
+            TotalEarned:Totals[i].totalEarned,
+            TotalTaxes:Totals[i].TotalTaxes
+          }
+          arr.push(obj)
+        }
+        
+        await CreateUserPayOut(User_id, arr)
+        
 
       })
     })
@@ -482,13 +500,7 @@ app.get('/', (req, res) => {
 
           })
         })
-
-
-    
     })
-
-
-    
   }
 
   else {
