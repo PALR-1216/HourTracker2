@@ -128,16 +128,40 @@ app.get('/checkUserPayOut', async (req, res) => {
 
 })  
 
-async function CreateUserPayOut(User_id, Totals) {
-  
-  
+async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
+  console.log(Totals)
+}
+
+async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
+  console.log(endPeriodDate)
+  // console.table(Totals)
+  let daysToAdd;
+
+  switch(Payment) {
+    case "Weekly":
+      daysToAdd = 7
+      break
+    
+    case "Biweekly":
+      daysToAdd = 14
+      break
+    
+    case "Monthly" :
+      daysToAdd = 30
+      break
+  }
+
+  let endDate = moment(endPeriodDate)
+  let startDate = moment(endDate).subtract(daysToAdd, 'days')
+  console.log(startDate)
+  await AddUserPayOutToDB(startDate,endDate, Totals, User_id)
  
 }
 
 async function GetUserHours(userNextDate, User_id) {
   let selectHours = `select * from Hours where UserID = '${User_id}'`;
   conn.query(selectHours, async(err,hours) =>{
-    let GetUserDeductions = `select User_deduction from Users where User_id = '${User_id}';`
+    let GetUserDeductions = `select User_deduction, User_EndPeriodDate, Payment from Users where User_id = '${User_id}';`
     conn.query(GetUserDeductions, async(err,deduction) =>{
       if(err) {
         throw err;
@@ -155,7 +179,7 @@ async function GetUserHours(userNextDate, User_id) {
           arr.push(obj)
         }
         
-        await CreateUserPayOut(User_id, arr)
+        await CreateUserPayOut(User_id, arr,deduction[0].User_EndPeriodDate, deduction[0].Payment)
         
 
       })
@@ -166,7 +190,7 @@ async function GetUserHours(userNextDate, User_id) {
 //*/5 * * * * *
 //0 0 * * *
 
-cron.schedule("/*/5 * * * * *", () =>{
+cron.schedule("/*/5 * * * * *", async() =>{
 
   // await getUserInfo(req.cookies.user_id );
   // return res.send('ok')
