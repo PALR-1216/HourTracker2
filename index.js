@@ -130,6 +130,14 @@ app.get('/checkUserPayOut', async (req, res) => {
 
 async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
   console.log(Totals)
+
+  let obj = {
+    startDate: moment(startDate).format("MMM DD"),
+    endDate:moment(endDate).format("MMM DD"),
+    Totals:Totals
+
+  }
+  console.log(obj)
 }
 
 async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
