@@ -136,19 +136,13 @@ async function GetUserHours(userNextDate, User_id) {
       if(err) {
         throw err;
       }
-      let setAllAmounts = `select SUM(TotalHours) as TotalHours, SUM(TotalEarned) as TotalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as Totaltax from Hours`
+      let setAllAmounts = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as TotalTaxes from Hours where UserID = '${User_id}'`
       conn.query(setAllAmounts, async(err,Totals) =>{
         console.log(Totals)
 
       })
-
-
-
     })
-
-
   })
-
 }
 
 //*/5 * * * * *
@@ -175,7 +169,6 @@ cron.schedule("/*/5 * * * * *", () =>{
       if(diff == 0 ) {
         await GetUserHours(userNextDate, userID)     
       }
-
     }
 
   })
