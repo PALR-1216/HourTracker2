@@ -214,40 +214,40 @@ async function GetUserHours(userNextDate, User_id) {
 //*/5 * * * * *
 //0 0 * * *
 
-cron.schedule("/*/5 * * * * *", async() =>{
-  const puertoRicoTimezone = 'America/Puerto_Rico';
+// cron.schedule("/*/5 * * * * *", async() =>{
+//   const puertoRicoTimezone = 'America/Puerto_Rico';
 
-// Get the current time in Puerto Rico's timezone
-const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
+// // Get the current time in Puerto Rico's timezone
+// const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
 
-// console.log(currentTimeInPuertoRico);
+// // console.log(currentTimeInPuertoRico);
 
-  // await getUserInfo(req.cookies.user_id );
-  // return res.send('ok')
-  //it works need to make the my checkMaker bot inside here
-  let selectUser = `select User_id, User_EndPeriodDate from Users`;
-   conn.query(selectUser, async (err,users) =>{
+//   // await getUserInfo(req.cookies.user_id );
+//   // return res.send('ok')
+//   //it works need to make the my checkMaker bot inside here
+//   let selectUser = `select User_id, User_EndPeriodDate from Users`;
+//    conn.query(selectUser, async (err,users) =>{
 
-    if(err) {throw err}
-    for(let i in users) {
-      let currentDate = moment()
+//     if(err) {throw err}
+//     for(let i in users) {
+//       let currentDate = moment()
     
-      let usersDate = moment(users[i].User_EndPeriodDate)
+//       let usersDate = moment(users[i].User_EndPeriodDate)
     
-      let userID = users[i].User_id;
-      let userNextDate = moment(usersDate).add(1,'days', true)
-      // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
+//       let userID = users[i].User_id;
+//       let userNextDate = moment(usersDate).add(1,'days', true)
+//       // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
       
-      let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
+//       let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
     
-      // console.log(`user - ${userID} date - ${userNextDate}`)
-      if(diff == 0 ) {
-        await GetUserHours(userNextDate, userID)     
-      }
-    }
+//       // console.log(`user - ${userID} date - ${userNextDate}`)
+//       if(diff == 0 ) {
+//         await GetUserHours(userNextDate, userID)     
+//       }
+//     }
 
-  })
-})
+//   })
+// })
 
 cron.schedule("0 0 * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
