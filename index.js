@@ -136,7 +136,7 @@ app.get('/checkUserPayOut', async (req, res) => {
     })
 })  
 
-async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
+async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay) {
   // console.log(Totals)
   //need to Add date when i receive the check
   //then delete all hours that are before the < next date 
@@ -144,13 +144,16 @@ async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
   let obj = {
     startDate: moment(startDate).format("MMM DD"),
     endDate:moment(endDate).format("MMM DD"),
-    Totals:Totals
+    Totals:Totals,
+    PayDay:moment(payDay).format("MMM DD")
 
   }
-  console.log(obj)
+  // console.log(obj)
+  let insertPayCheck = `insert into PayOuts values ('${nanoid()}', '${User_id}', '${moment(startDate).format("MMM DD")}', '${moment(endDate).format("MMM DD")}', ${Totals[0].TotalEarned}, ${Totals[0].Total}, ${Totals[0].TotalTaxes}, '${moment(payDay).format("MMM DD")}')`
+  console.log(insertPayCheck)
 }
 
-async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
+async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment, payDay) {
   // console.log(endPeriodDate)
   // console.table(Totals)
   let daysToAdd;
@@ -172,7 +175,7 @@ async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
   let endDate = moment(endPeriodDate)
   let startDate = moment(endDate).subtract(daysToAdd, 'days')
   // console.log(startDate)
-  await AddUserPayOutToDB(startDate,endDate, Totals, User_id)
+  await AddUserPayOutToDB(startDate,endDate, Totals, User_id, payDay)
  
 }
 
@@ -182,7 +185,7 @@ async function GetUserHours(userNextDate, User_id) {
     if (hours.length != 0) {
 
 
-      let GetUserDeductions = `select User_deduction, User_EndPeriodDate, Payment from Users where User_id = '${User_id}';`
+      let GetUserDeductions = `select User_deduction, User_EndPeriodDate, Payment, User_PayOut from Users where User_id = '${User_id}';`
       conn.query(GetUserDeductions, async (err, deduction) => {
         if (err) {
           throw err;
@@ -202,7 +205,7 @@ async function GetUserHours(userNextDate, User_id) {
             arr.push(obj)
           }
 
-          await CreateUserPayOut(User_id, arr, deduction[0].User_EndPeriodDate, deduction[0].Payment)
+          await CreateUserPayOut(User_id, arr, deduction[0].User_EndPeriodDate, deduction[0].Payment, deduction[0].User_PayOut)
 
 
         })
@@ -214,40 +217,40 @@ async function GetUserHours(userNextDate, User_id) {
 //*/5 * * * * *
 //0 0 * * *
 
-// cron.schedule("/*/5 * * * * *", async() =>{
-//   const puertoRicoTimezone = 'America/Puerto_Rico';
+cron.schedule("/*/5 * * * * *", async() =>{
+  const puertoRicoTimezone = 'America/Puerto_Rico';
 
-// // Get the current time in Puerto Rico's timezone
-// const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
+// Get the current time in Puerto Rico's timezone
+const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
 
-// // console.log(currentTimeInPuertoRico);
+// console.log(currentTimeInPuertoRico);
 
-//   // await getUserInfo(req.cookies.user_id );
-//   // return res.send('ok')
-//   //it works need to make the my checkMaker bot inside here
-//   let selectUser = `select User_id, User_EndPeriodDate from Users`;
-//    conn.query(selectUser, async (err,users) =>{
+  // await getUserInfo(req.cookies.user_id );
+  // return res.send('ok')
+  //it works need to make the my checkMaker bot inside here
+  let selectUser = `select User_id, User_EndPeriodDate from Users`;
+   conn.query(selectUser, async (err,users) =>{
 
-//     if(err) {throw err}
-//     for(let i in users) {
-//       let currentDate = moment()
+    if(err) {throw err}
+    for(let i in users) {
+      let currentDate = moment()
     
-//       let usersDate = moment(users[i].User_EndPeriodDate)
+      let usersDate = moment(users[i].User_EndPeriodDate)
     
-//       let userID = users[i].User_id;
-//       let userNextDate = moment(usersDate).add(1,'days', true)
-//       // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
+      let userID = users[i].User_id;
+      let userNextDate = moment(usersDate).add(1,'days', true)
+      // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
       
-//       let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
+      let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
     
-//       // console.log(`user - ${userID} date - ${userNextDate}`)
-//       if(diff == 0 ) {
-//         await GetUserHours(userNextDate, userID)     
-//       }
-//     }
+      // console.log(`user - ${userID} date - ${userNextDate}`)
+      if(diff == 0 ) {
+        await GetUserHours(userNextDate, userID)     
+      }
+    }
 
-//   })
-// })
+  })
+})
 
 cron.schedule("0 0 * * *", () =>{
   let selectUser = `select User_id, User_EndPeriodDate from Users`;
