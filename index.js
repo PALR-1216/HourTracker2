@@ -136,7 +136,12 @@ app.get('/checkUserPayOut', async (req, res) => {
     })
 })  
 
-async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay) {
+async function UpdateUsersEndPeriodDate(endDate, ID, daysToAdd) {
+  console.log(daysToAdd)
+  
+}
+
+async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay, daysToAdd) {
   // console.log(Totals)
   //need to Add date when i receive the check
   //then delete all hours that are before the < next date 
@@ -151,6 +156,13 @@ async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay) {
   // console.log(obj)
   let insertPayCheck = `insert into PayOuts values ('${nanoid()}', '${User_id}', '${moment(startDate).format("MMM DD")}', '${moment(endDate).format("MMM DD")}', ${Totals[0].TotalEarned}, ${Totals[0].Total}, ${Totals[0].TotalTaxes}, '${moment(payDay).format("MMM DD")}')`
   console.log(insertPayCheck)
+  // conn.commit(insertPayCheck, (err) =>{
+  //   if(err) {
+  //     throw err
+  //   }
+  // })
+
+  await UpdateUsersEndPeriodDate(endDate, User_id, daysToAdd);
 }
 
 async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment, payDay) {
@@ -175,7 +187,7 @@ async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment, payDay)
   let endDate = moment(endPeriodDate)
   let startDate = moment(endDate).subtract(daysToAdd, 'days')
   // console.log(startDate)
-  await AddUserPayOutToDB(startDate,endDate, Totals, User_id, payDay)
+  await AddUserPayOutToDB(startDate,endDate, Totals, User_id, payDay, daysToAdd)
  
 }
 
