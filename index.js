@@ -102,31 +102,38 @@ app.use(session({
 
 app.get('/checkUserPayOut', async (req, res) => {
 
-  // await getUserInfo(req.cookies.user_id );
-  // return res.send('ok')
-  //it works need to make the my checkMaker bot inside here
-  let selectUser = `select User_id, User_EndPeriodDate from Users`;
-   conn.query(selectUser, async (err,users) =>{
+  const puertoRicoTimezone = 'America/Puerto_Rico';
 
-    if(err) {throw err}
-    for(let i in users) {
-      let currentDate = moment();
-      let usersDate = moment(users[i].User_EndPeriodDate)
-      let userID = users[i].User_id;
-      let userNextDate = moment(usersDate).add(1,'day', true);
-      let diff = currentDate.diff(userNextDate)
-      console.log(diff)
-
-      // console.log(`user - ${userID} date - ${userNextDate}`)
-      if(currentDate == userNextDate) {
-
-        // await GetUserHours(userNextDate, User_id)
+  // Get the current time in Puerto Rico's timezone
+  const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
+  
+  // console.log(currentTimeInPuertoRico);
+  
+    // await getUserInfo(req.cookies.user_id );
+    // return res.send('ok')
+    //it works need to make the my checkMaker bot inside here
+    let selectUser = `select User_id, User_EndPeriodDate from Users`;
+     conn.query(selectUser, async (err,users) =>{
+  
+      if(err) {throw err}
+      for(let i in users) {
+        let currentDate = moment()
+      
+        let usersDate = moment(users[i].User_EndPeriodDate)
+      
+        let userID = users[i].User_id;
+        let userNextDate = moment(usersDate).add(1,'days', true)
+        // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
+        
+        let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
+      
+        // console.log(`user - ${userID} date - ${userNextDate}`)
+        if(diff == 0 ) {
+          await GetUserHours(userNextDate, userID)     
+        }
       }
-
-    }
-
-  })
-
+  
+    })
 })  
 
 async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
@@ -236,13 +243,10 @@ const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
       // console.log(`user - ${userID} date - ${userNextDate}`)
       if(diff == 0 ) {
         await GetUserHours(userNextDate, userID)     
-
-    
       }
     }
 
   })
-
 })
 
 cron.schedule("0 0 * * *", () =>{
