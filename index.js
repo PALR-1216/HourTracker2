@@ -17,6 +17,7 @@ import moment from 'moment';
 import cookieSession from 'cookie-session';
 import { userInfo } from 'os';
 import device from 'express-device'
+import zone from 'moment-timezone';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -129,7 +130,9 @@ app.get('/checkUserPayOut', async (req, res) => {
 })  
 
 async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
-  console.log(Totals)
+  // console.log(Totals)
+  //need to Add date when i receive the check
+  //then delete all hours that are before the < next date 
 
   let obj = {
     startDate: moment(startDate).format("MMM DD"),
@@ -141,7 +144,7 @@ async function AddUserPayOutToDB(startDate,endDate, Totals, User_id) {
 }
 
 async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
-  console.log(endPeriodDate)
+  // console.log(endPeriodDate)
   // console.table(Totals)
   let daysToAdd;
 
@@ -161,37 +164,43 @@ async function CreateUserPayOut(User_id, Totals, endPeriodDate, Payment) {
 
   let endDate = moment(endPeriodDate)
   let startDate = moment(endDate).subtract(daysToAdd, 'days')
-  console.log(startDate)
+  // console.log(startDate)
   await AddUserPayOutToDB(startDate,endDate, Totals, User_id)
  
 }
 
 async function GetUserHours(userNextDate, User_id) {
   let selectHours = `select * from Hours where UserID = '${User_id}'`;
-  conn.query(selectHours, async(err,hours) =>{
-    let GetUserDeductions = `select User_deduction, User_EndPeriodDate, Payment from Users where User_id = '${User_id}';`
-    conn.query(GetUserDeductions, async(err,deduction) =>{
-      if(err) {
-        throw err;
-      }
-      let setAllAmounts = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as TotalTaxes from Hours where UserID = '${User_id}'`
-      conn.query(setAllAmounts, async(err,Totals) =>{
-        let arr = []
-        // console.log(Totals)
-        for (let  i in Totals) { 
-          let obj = {
-            Total:Totals[i].Total,
-            TotalEarned:Totals[i].totalEarned,
-            TotalTaxes:Totals[i].TotalTaxes
-          }
-          arr.push(obj)
-        }
-        
-        await CreateUserPayOut(User_id, arr,deduction[0].User_EndPeriodDate, deduction[0].Payment)
-        
+  conn.query(selectHours, async (err, hours) => {
+    if (hours.length != 0) {
 
+
+      let GetUserDeductions = `select User_deduction, User_EndPeriodDate, Payment from Users where User_id = '${User_id}';`
+      conn.query(GetUserDeductions, async (err, deduction) => {
+        if (err) {
+          throw err;
+        }
+
+
+        let setAllAmounts = `select SUM(TotalHours) as Total, SUM(TotalEarned) as totalEarned, SUM(TotalEarned * ${deduction[0].User_deduction}) as TotalTaxes from Hours where UserID = '${User_id}'`
+        conn.query(setAllAmounts, async (err, Totals) => {
+          let arr = []
+          // console.log(Totals)
+          for (let i in Totals) {
+            let obj = {
+              Total: Totals[i].Total,
+              TotalEarned: Totals[i].totalEarned,
+              TotalTaxes: Totals[i].TotalTaxes
+            }
+            arr.push(obj)
+          }
+
+          await CreateUserPayOut(User_id, arr, deduction[0].User_EndPeriodDate, deduction[0].Payment)
+
+
+        })
       })
-    })
+    }
   })
 }
 
@@ -199,6 +208,12 @@ async function GetUserHours(userNextDate, User_id) {
 //0 0 * * *
 
 cron.schedule("/*/5 * * * * *", async() =>{
+  const puertoRicoTimezone = 'America/Puerto_Rico';
+
+// Get the current time in Puerto Rico's timezone
+const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
+
+// console.log(currentTimeInPuertoRico);
 
   // await getUserInfo(req.cookies.user_id );
   // return res.send('ok')
@@ -208,16 +223,21 @@ cron.schedule("/*/5 * * * * *", async() =>{
 
     if(err) {throw err}
     for(let i in users) {
-      let currentDate = moment();
+      let currentDate = moment()
+    
       let usersDate = moment(users[i].User_EndPeriodDate)
+    
       let userID = users[i].User_id;
-      let userNextDate = moment(usersDate).add(1,'day', true);
-      let diff = currentDate.diff(userNextDate, 'days')
-      console.log(diff)
-
+      let userNextDate = moment(usersDate).add(1,'days', true)
+      // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
+      
+      let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
+    
       // console.log(`user - ${userID} date - ${userNextDate}`)
       if(diff == 0 ) {
         await GetUserHours(userNextDate, userID)     
+
+    
       }
     }
 
