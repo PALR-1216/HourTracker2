@@ -137,8 +137,18 @@ app.get('/checkUserPayOut', async (req, res) => {
 })  
 
 async function UpdateUsersEndPeriodDate(endDate, ID, daysToAdd) {
-  console.log(daysToAdd)
-  
+  let addDays = moment(endDate).add(daysToAdd, 'days');
+  let updateDate = `UPDATE Users SET User_EndPeriodDate = '${addDays.format("YYYY/MM/DD")}' WHERE User_id = '${ID}';`
+  // console.log(updateDate)
+
+  // conn.commit(updateDate, (err) =>{
+  //   if(err) {
+  //     throw err.message
+
+  //   }
+  // })
+
+
 }
 
 async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay, daysToAdd) {
@@ -155,7 +165,7 @@ async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay, days
   }
   // console.log(obj)
   let insertPayCheck = `insert into PayOuts values ('${nanoid()}', '${User_id}', '${moment(startDate).format("MMM DD")}', '${moment(endDate).format("MMM DD")}', ${Totals[0].TotalEarned}, ${Totals[0].Total}, ${Totals[0].TotalTaxes}, '${moment(payDay).format("MMM DD")}')`
-  console.log(insertPayCheck)
+  // console.log(insertPayCheck)
   // conn.commit(insertPayCheck, (err) =>{
   //   if(err) {
   //     throw err
