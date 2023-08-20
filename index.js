@@ -848,6 +848,10 @@ app.post('/calculateHour', (req, res) => {
   })
 })
 
+app.get("/PayOuts", (req,res) =>{
+  res.render("PayOuts");
+})
+
 
 // app.get('/DataSubmited', (req,res) =>{
 //   res.render("PopUps/DataAdded");
