@@ -39,7 +39,7 @@
       justify-content: center;
       align-items: center;
     }
-    .hours-number {
+    .hours-number { 
       font-size: 1.6rem;
       color: #1a202c;
       font-weight: 600;
@@ -65,9 +65,9 @@
     }
   </style>
   <body>
-    <div class="flex h-screen items-center justify-center p-2">
+    <div class="flex  items-center justify-center p-2">
       <!-- Add the flex-col and justify-center classes here -->
-      <div class="container w-full p-4 md:w-2/3 md:p-8 lg:w-1/2 flex justify-center">
+      <div class="container w-full m-4 p-4 md:w-2/3 md:p-8 lg:w-1/2 flex justify-center">
         <div class="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-4">
           <div class="hours-container">
             <div class="hours-icon">
@@ -96,7 +96,50 @@
             <p class="text-gray-600 sm:hidden">Aug 1 - Aug 31, 23</p>
           </div>
         </div>
+
+        
+        
       </div>
+      
     </div>
+
+     <div class="flex items-center justify-center p-2">
+      <!-- Add the flex-col and justify-center classes here -->
+      <div class="container w-full p-4 m-4 md:w-2/3 md:p-8 lg:w-1/2 flex justify-center">
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-4">
+          <div class="hours-container">
+            <div class="hours-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="hours-number">48</div>
+            <div class="w-16 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full absolute bottom-0 left-0 right-0 mx-auto"></div>
+          </div>
+
+          <div class="hours-container">
+            <div class="hours-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="hours-number">$500.00</div>
+            <div class="w-16 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full absolute bottom-0 left-0 right-0 mx-auto"></div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-lg font-semibold">Deposit Date</h3>
+            <p class="text-gray-600 sm:hidden">Aug 19, 23</p>
+            <p class="hidden text-gray-600 sm:block">Aug 19, 2023</p>
+          </div>
+          <div>
+            <h3 class="mb-2 text-lg font-semibold">Pay Period</h3>
+            <p class="hidden text-gray-600 sm:block">Aug 1 - Aug 31, 2023</p>
+            <p class="text-gray-600 sm:hidden">Aug 1 - Aug 31, 23</p>
+          </div>
+        </div>
+
+        
+        
+      </div>
+      
+    </div>
+
   </body>
 </html>
