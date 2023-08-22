@@ -72,7 +72,7 @@
           <div>
             <label for="DatePicker" id="DatePicker" class="block text-sm font-medium leading-6 text-gray-900">Select The date of the period End</label>
             <div class="mt-2">
-              <input id="Date" name="DatePickerEnd" style="width: 380px; height: 40px; font-size: 15px;" type="date" required
+              <input id="endDatePicker" name="DatePickerEnd" style="width: 380px; height: 40px; font-size: 15px;" type="date" min="" required
                 class="block w-full  rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ">
                 </div>
                 
@@ -81,7 +81,7 @@
             <div>
               <label for="payOut" id="payOut" class="block text-sm font-medium leading-6 text-gray-900">Select your next PayOut Date</label>
               <div class="mt-2">
-                <input id="Date" name="payOut" style="width: 380px; height: 40px; font-size: 15px;" type="date" required
+                <input id="payOutDate" name="payOut" style="width: 380px; height: 40px; font-size: 15px;" type="date" min="" required
                   class="block w-full  rounded-md border border-indigo-500 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ">
                   </div>
                   
@@ -228,6 +228,18 @@
 }
     
   </style>
+
+  <script>
+    const endDatePicker = document.getElementById('endDatePicker');
+  const payOutDate = document.getElementById('payOutDate');
+
+  // Get today's date in the format YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0];
+  // Set the minimum date for both date picker inputs to today's date
+  endDatePicker.min = today;
+  payOutDate.min = today;
+    
+  </script>
 
 
 </body>
