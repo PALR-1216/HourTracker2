@@ -1,5 +1,5 @@
 
-<%- include("_Navbar")-%>
+<%- include("../_Navbar")-%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +70,10 @@
     }
   </style>
   <body>
+
+    <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Your PayOuts</h1>
+
+
     <div class="flex  items-center justify-center p-2">
       <!-- Add the flex-col and justify-center classes here -->
       <div class="container w-full m-4 p-4 md:w-2/3 md:p-8 lg:w-1/2 flex justify-center">
@@ -86,7 +90,7 @@
             <div class="hours-icon">
               <i class="fas fa-dollar-sign"></i>
             </div>
-            <div class="hours-number">$500.00</div>
+            <div class="hours-number">500.00</div>
             <div class="w-16 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full absolute bottom-0 left-0 right-0 mx-auto"></div>
           </div>
 
@@ -149,3 +153,5 @@
 
   </body>
 </html>
+
+<%- include("../_Footer")-%>

@@ -849,7 +849,17 @@ app.post('/calculateHour', (req, res) => {
 })
 
 app.get("/PayOuts", (req,res) =>{
-  res.render("PayOuts");
+  let deviceType = ''
+
+  if(req.device.type === "phone" && req.cookies.user_id) {
+    res.render("/Containers/PayOutsMobile");
+
+  }
+
+  if(req.device.type === "desktop" || req.device.typev=== "tablet" && req.cookies.user_id) {
+    res.render("Containers/PayOuts");
+
+  }
 })
 
 
