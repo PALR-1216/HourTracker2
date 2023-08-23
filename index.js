@@ -141,12 +141,12 @@ async function UpdateUsersEndPeriodDate(endDate, ID, daysToAdd) {
   let updateDate = `UPDATE Users SET User_EndPeriodDate = '${addDays.format("YYYY/MM/DD")}' WHERE User_id = '${ID}';`
   // console.log(updateDate)
 
-  // conn.commit(updateDate, (err) =>{
-  //   if(err) {
-  //     throw err.message
+  conn.commit(updateDate, (err) =>{
+    if(err) {
+      throw err.message
 
-  //   }
-  // })
+    }
+  })
 
 
 }
@@ -165,12 +165,12 @@ async function AddUserPayOutToDB(startDate,endDate, Totals, User_id,payDay, days
   }
   // console.log(obj)
   let insertPayCheck = `insert into PayOuts values ('${nanoid()}', '${User_id}', '${moment(startDate).format("MMM DD")}', '${moment(endDate).format("MMM DD")}', ${Totals[0].TotalEarned}, ${Totals[0].Total}, ${Totals[0].TotalTaxes}, '${moment(payDay).format("MMM DD")}')`
-  // console.log(insertPayCheck)
-  // conn.commit(insertPayCheck, (err) =>{
-  //   if(err) {
-  //     throw err
-  //   }
-  // })
+  console.log(insertPayCheck)
+  conn.commit(insertPayCheck, (err) =>{
+    if(err) {
+      throw err
+    }
+  })
 
   await UpdateUsersEndPeriodDate(endDate, User_id, daysToAdd);
 }
@@ -239,74 +239,74 @@ async function GetUserHours(userNextDate, User_id) {
 //*/5 * * * * *
 //0 0 * * *
 
-cron.schedule("/*/5 * * * * *", async() =>{
-  const puertoRicoTimezone = 'America/Puerto_Rico';
+// cron.schedule("/*/5 * * * * *", async() =>{
+//   const puertoRicoTimezone = 'America/Puerto_Rico';
 
-// Get the current time in Puerto Rico's timezone
-const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
+// // Get the current time in Puerto Rico's timezone
+// const currentTimeInPuertoRico = moment().tz(puertoRicoTimezone);
 
-// console.log(currentTimeInPuertoRico);
+// // console.log(currentTimeInPuertoRico);
 
-  // await getUserInfo(req.cookies.user_id );
-  // return res.send('ok')
-  //it works need to make the my checkMaker bot inside here
-  let selectUser = `select User_id, User_EndPeriodDate from Users`;
-   conn.query(selectUser, async (err,users) =>{
+//   // await getUserInfo(req.cookies.user_id );
+//   // return res.send('ok')
+//   //it works need to make the my checkMaker bot inside here
+//   let selectUser = `select User_id, User_EndPeriodDate from Users`;
+//    conn.query(selectUser, async (err,users) =>{
 
-    if(err) {throw err}
-    for(let i in users) {
-      let currentDate = moment()
+//     if(err) {throw err}
+//     for(let i in users) {
+//       let currentDate = moment()
     
-      let usersDate = moment(users[i].User_EndPeriodDate)
+//       let usersDate = moment(users[i].User_EndPeriodDate)
     
-      let userID = users[i].User_id;
-      let userNextDate = moment(usersDate).add(1,'days', true)
-      // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
+//       let userID = users[i].User_id;
+//       let userNextDate = moment(usersDate).add(1,'days', true)
+//       // console.log(`first Date - ${currentDate} second ndate - ${userNextDate}`)
       
-      let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
+//       let diff = currentTimeInPuertoRico.diff(userNextDate, 'days')
     
-      // console.log(`user - ${userID} date - ${userNextDate}`)
-      if(diff == 0 ) {
-        await GetUserHours(userNextDate, userID)     
-      }
-    }
+//       // console.log(`user - ${userID} date - ${userNextDate}`)
+//       if(diff == 0 ) {
+//         await GetUserHours(userNextDate, userID)     
+//       }
+//     }
 
-  })
-})
+//   })
+// })
 
-cron.schedule("0 0 * * *", () =>{
-  let selectUser = `select User_id, User_EndPeriodDate from Users`;
+// cron.schedule("0 0 * * *", () =>{
+//   let selectUser = `select User_id, User_EndPeriodDate from Users`;
 
-  conn.query(selectUser, (err,rows) =>{
+//   conn.query(selectUser, (err,rows) =>{
 
-    if(rows.length != 0) {
-
-
-      if(err) {
-        throw err
-      };
+//     if(rows.length != 0) {
 
 
-      for(let i in rows) {
-        let ID = rows[i].User_id;
-        let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
-        let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
-        console.log(getNextDayOfPeriodEnd)
-        let currentDate = moment().format("MM/DD/YYYY")
+//       if(err) {
+//         throw err
+//       };
 
-        if(getNextDayOfPeriodEnd === currentDate) {
-          getTotalEarned(ID, User_EndPeriodDate, getNextDayOfPeriodEnd)
+
+//       for(let i in rows) {
+//         let ID = rows[i].User_id;
+//         let User_EndPeriodDate = moment(rows[i].User_EndPeriodDate)
+//         let getNextDayOfPeriodEnd = User_EndPeriodDate.add(1, 'days', true).format("MM/DD/YYYY")
+//         console.log(getNextDayOfPeriodEnd)
+//         let currentDate = moment().format("MM/DD/YYYY")
+
+//         if(getNextDayOfPeriodEnd === currentDate) {
+//           getTotalEarned(ID, User_EndPeriodDate, getNextDayOfPeriodEnd)
           
 
-        }
+//         }
 
-        else {
-          console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
-        } 
-        }
-      }
-  })
-})
+//         else {
+//           console.log(`Not Today for User - ${ID} the Date - ${getNextDayOfPeriodEnd}`)
+//         } 
+//         }
+//       }
+//   })
+// })
 
 
 
@@ -850,6 +850,20 @@ app.post('/calculateHour', (req, res) => {
 
 app.get("/PayOuts", (req,res) =>{
   let deviceType = ''
+
+  let selectPayOut = `select * from PayOuts where User_ID = '${req.cookies.user_id}'; `
+
+  conn.query(selectPayOut, (err,rows) =>{
+    if(err) {console.log(err); throw err;}
+
+    if(rows.length > 0) {
+      for(let i in rows) {
+        
+      }
+
+    }
+
+  })
 
   if(req.device.type === "phone" && req.cookies.user_id) {
     res.render("/Containers/PayOutsMobile");
